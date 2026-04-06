@@ -1,5 +1,6 @@
 package com.dash0.sctools;
 
+import com.dash0.sctools.servlet.CriteriaServlet;
 import com.dash0.sctools.servlet.DashboardServlet;
 import com.dash0.sctools.servlet.PovServlet;
 import com.dash0.sctools.servlet.RootRedirectServlet;
@@ -133,6 +134,7 @@ public class Application {
         webapp.addServlet(new ServletHolder("dashboard", DashboardServlet.class), "/dashboard");
         webapp.addServlet(new ServletHolder("timeEntries", TimeEntryServlet.class), "/time-entries");
         webapp.addServlet(new ServletHolder("povs", PovServlet.class), "/povs");
+        webapp.addServlet(new ServletHolder("criteria", CriteriaServlet.class), "/criteria");
         webapp.addServlet(new ServletHolder("root", RootRedirectServlet.class), "");
     }
 
