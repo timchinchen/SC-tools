@@ -1,0 +1,39 @@
+{
+  "featureId": "pov-criteria-crud",
+  "reviewedAt": "2026-04-06T15:30:00.000Z",
+  "commitId": "a13fae2",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid implementation of CriteriaServlet with full CRUD for POV criteria. The servlet handles create, edit, and delete operations with proper server-side validation, PRG pattern compliance, XSS prevention via JSTL c:out tags, and defensive parameter parsing. The JSP form correctly renders all required fields (Name, Description, Status dropdown with 5 options defaulting to NOT_STARTED, Weight 1-5 dropdown, Notes). Delete confirmation is handled via JavaScript confirm() on the POV detail page, consistent with existing POV delete pattern. 56 comprehensive integration tests cover all handlers, validation edge cases, status change persistence, and a full lifecycle test. The worker encountered a JSP EL type coercion bug when weight is non-numeric and fixed it using fn:trim string comparison — a reasonable approach.",
+    "issues": [
+      {
+        "file": "src/main/java/com/dash0/sctools/servlet/CriteriaServlet.java",
+        "line": 260,
+        "severity": "non_blocking",
+        "description": "handleDelete() does not verify that the criterion's povId matches the provided povId parameter. A request with a valid criterion ID but a mismatched povId would delete the criterion and redirect to the wrong POV's detail page. Low risk since this is an internal tool with no authentication, and the delete links are generated server-side with correct IDs."
+      },
+      {
+        "file": "src/main/java/com/dash0/sctools/servlet/CriteriaServlet.java",
+        "line": 213,
+        "severity": "non_blocking",
+        "description": "handleEdit() does not verify that existing.getPovId() matches the provided povId parameter. A request could update a criterion while specifying a different POV ID, causing the redirect to go to the wrong POV detail page. Same low risk as the delete case — links are generated correctly in the UI."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The architecture.md Web Structure section does not list the new criteria/ JSP directory under WEB-INF/jsp/. As more features add JSP directories, keeping this structure doc current helps future workers understand the layout.",
+      "evidence": ".factory/library/architecture.md Web Structure section lists time-entries/, povs/, dashboard.jsp, and layout/ but not criteria/"
+    },
+    {
+      "area": "skills",
+      "observation": "Worker followed the skill procedure correctly. The skill says to use agent-browser for UI verification (step 6), but the worker could not start agent-browser due to the known npm cache issue. Worker correctly fell back to curl-based verification per AGENTS.md guidance. The skill could note this fallback explicitly to save future workers time.",
+      "evidence": "Transcript shows worker attempted agent-browser 4 times before falling back to curl. Handoff skillFeedback.followedProcedure=true, suggestedChanges mentions noting agent-browser unavailability in skill."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "CriteriaServlet implementation passes review. All feature requirements are met: CRUD operations for POV criteria with proper validation, status dropdown (5 options, NOT_STARTED default), weight 1-5, delete with confirmation, and all redirects back to parent POV detail page. 56 integration tests provide thorough coverage including a full lifecycle test. Two non-blocking issues noted: delete and edit handlers don't cross-validate that the criterion belongs to the specified POV, but this is low risk for an internal tool with server-generated links. Code follows all project conventions (PRG, XSS prevention, JDBC PreparedStatement, server-side validation with input preservation)."
+}

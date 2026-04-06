@@ -1,0 +1,45 @@
+{
+  "featureId": "dashboard-page",
+  "reviewedAt": "2026-04-06T15:50:00.000Z",
+  "commitId": "2d396d9",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Clean, well-structured implementation of the DashboardServlet with SC Time and POV summary sections. The servlet follows the project's established patterns: @WebServlet annotation, constructor injection for testability, PreparedStatement for all SQL, no-cache headers for data freshness, and proper JSP forwarding. The dashboard.jsp correctly uses JSTL c:choose/c:when for empty states and raw EL for server-controlled numeric values (consistent with AGENTS.md conventions). RootRedirectServlet provides the / -> /dashboard redirect. Navigation header already has all three links (Dashboard, Time Entries, POVs). DAO methods (getTotalHours, getCount, countByStatus) are straightforward aggregate queries using PreparedStatement and COALESCE for null-safety. Tests are comprehensive: 23 integration tests using embedded Jetty covering HTTP status, no-cache headers, empty states, data summaries, section independence, data freshness after CRUD, cross-navigation, and direct URL access. DAO tests cover empty, single, and multiple entry scenarios for all new methods. All 8 files changed, 915 lines added.",
+    "issues": [
+      {
+        "file": "src/main/java/com/dash0/sctools/servlet/DashboardServlet.java",
+        "line": 55,
+        "severity": "non_blocking",
+        "description": "The servlet makes 4 separate DB calls (getTotalHours, getCount on TimeEntryDao; getCount, countByStatus on PovDao), each opening a new connection. For a low-traffic dashboard this is fine, but if performance becomes a concern, these could be combined into fewer queries or a single connection could be reused. Not a problem for current scale."
+      },
+      {
+        "file": "src/main/webapp/WEB-INF/jsp/dashboard.jsp",
+        "line": 48,
+        "severity": "non_blocking",
+        "description": "The status keys in the JSP (PLANNED, IN_PROGRESS, etc.) are hardcoded strings. If a new status were added to the Pov model, the JSP would need manual updating. A c:forEach loop over the map entries would be more maintainable, though the current approach provides explicit control over display order and badge CSS classes."
+      },
+      {
+        "file": "src/test/java/com/dash0/sctools/servlet/DashboardServletTest.java",
+        "line": 36,
+        "severity": "non_blocking",
+        "description": "TEST_PORT is hardcoded to 8098. If another test suite in the project uses the same port, tests could conflict. However, this follows the same pattern as other servlet tests in the project (each test class uses a dedicated port in the 8090-8099 range), so this is consistent with existing conventions."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The DashboardServlet introduces a constructor-injection pattern for DAOs (a default no-arg constructor for production and a parameterized constructor for testing). This pattern is clean and testable but isn't documented in AGENTS.md as a convention. Other servlets may or may not follow this pattern — it could be worth documenting as a recommended approach for servlet testability.",
+      "evidence": "src/main/java/com/dash0/sctools/servlet/DashboardServlet.java:35-46 has both constructors. The test DashboardServletTest uses the production default constructor via embedded Jetty rather than the test constructor."
+    },
+    {
+      "area": "conventions",
+      "observation": "The integration test port allocation strategy (each test class uses a hardcoded port in the 8090-8099 range) is an implicit convention but not documented in AGENTS.md. As more servlet test classes are added, this could lead to port collisions if not tracked.",
+      "evidence": "DashboardServletTest uses port 8098. Other test classes likely use other ports in the same range. AGENTS.md mentions 'Port Range: 8090-8099' for the application but doesn't address test port allocation."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "The dashboard-page feature is well-implemented and passes review. DashboardServlet properly queries live data on each request with no-cache headers, handles empty states gracefully, shows correct SC Time summaries (total hours, entry count) and POV summaries (total count, per-status breakdown for all 6 statuses). Navigation is complete in the shared header. All SQL uses PreparedStatement. The JSP follows XSS conventions (only server-controlled numeric values use raw EL). RootRedirectServlet handles / -> /dashboard. Comprehensive integration tests (23 tests) and DAO unit tests (10 new tests) cover all expected behaviors. No blocking issues found."
+}

@@ -1,0 +1,40 @@
+{
+  "featureId": "pov-detail-edit-delete",
+  "reviewedAt": "2026-04-06T15:45:00.000Z",
+  "commitId": "fc60fd3",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid implementation covering all feature requirements. PovServlet correctly adds showDetail, showEditForm, handleEdit, and handleDelete handlers with proper 404 handling, validation reuse, and PRG pattern. detail.jsp renders all POV fields with status badge, criteria table (or empty state), Edit/Delete POV buttons, Add Criteria link, and Back to List link. form.jsp correctly differentiates edit vs create modes for form action URL and cancel link. 46 new integration tests comprehensively cover detail, edit, delete, cascade delete, error handling, XSS protection, and no-stack-trace assertions. No blocking issues found.",
+    "issues": [
+      {
+        "file": "src/main/java/com/dash0/sctools/servlet/PovServlet.java",
+        "line": 449,
+        "severity": "non_blocking",
+        "description": "getCriteriaStatusDisplayName() and getCriteriaBadgeClass() static methods are defined but never called anywhere. The criteria status badges in detail.jsp are rendered inline via JSTL c:choose/c:when blocks instead. These methods are dead code. Minor; could be useful for future features or could be removed to avoid confusion."
+      },
+      {
+        "file": "src/main/java/com/dash0/sctools/servlet/PovServlet.java",
+        "line": 63,
+        "severity": "non_blocking",
+        "description": "The single-arg constructor PovServlet(PovDao) creates a new PovCriteriaDao() using production DB. This constructor exists for backward compatibility with existing tests. Not a bug since integration tests use the real embedded DB, but the 2-arg constructor is cleaner for full testability."
+      },
+      {
+        "file": "src/main/webapp/WEB-INF/jsp/povs/detail.jsp",
+        "line": 12,
+        "severity": "non_blocking",
+        "description": "Inline styles (style=\"display:inline;\") on the delete form and (style=\"margin-top: 1.5rem;\") on the back link div. These could be CSS classes for consistency, but functionally correct."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The criteria status-to-badge mapping in detail.jsp is done via inline JSTL c:choose/c:when blocks rather than passing pre-computed attributes from the servlet. Meanwhile, the POV status badge uses servlet-side getBadgeClass() and getStatusDisplayName() methods passed as request attributes. This inconsistency isn't documented in AGENTS.md. A convention note about whether to compute display values in the servlet vs JSP would help future workers.",
+      "evidence": "PovServlet.java:140-141 passes badgeClass/statusDisplayName as request attributes for POV status. detail.jsp:74-95 uses inline JSTL for criteria status badges. PovServlet.java:449-484 defines getCriteriaStatusDisplayName/getCriteriaBadgeClass but they're unused."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature pov-detail-edit-delete passes review. The implementation fully covers all expected behaviors: detail page with all fields, status badges, criteria section (table or empty state), edit/delete buttons, back link; edit form with pre-populated values and shared validation; delete with cascade and JS confirmation; 404 for invalid/missing/non-existent IDs. 46 new tests are thorough, including XSS and no-stack-trace checks. Three non-blocking observations noted: dead utility methods for criteria status, single-arg constructor creates production PovCriteriaDao, and minor inline styles in JSP."
+}

@@ -32,6 +32,7 @@ src/main/webapp/
 │   ├── layout/               # Header, footer, nav includes
 │   ├── time-entries/          # Time entry list, form
 │   ├── povs/                  # POV list, form, detail
+│   ├── criteria/              # POV criteria form
 │   └── dashboard.jsp          # Dashboard/home
 └── static/                   # CSS, JS, images
 ```
