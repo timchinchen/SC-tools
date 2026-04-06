@@ -95,9 +95,10 @@ class InstrumentationTest {
     void dashboardPage_containsDash0WebSdk() throws Exception {
         HttpURLConnection conn = openGet("/dashboard");
         String body = readBody(conn);
-        assertTrue(body.contains("dash0-sdk-web"), "Dashboard page should include Dash0 Web SDK script");
-        assertTrue(body.contains("data-dash0-otel-collector-url"), "SDK should have collector URL configured");
+        assertTrue(body.contains("dash0(\"init\""), "Dashboard page should include Dash0 Web SDK init call");
         assertTrue(body.contains("sc-tools-frontend"), "SDK should have service name configured");
+        assertTrue(body.contains("localhost:4318"), "SDK should have collector URL configured");
+        assertTrue(body.contains("unpkg.com/@dash0/sdk-web"), "Dashboard page should load Dash0 SDK from unpkg");
         conn.disconnect();
     }
 
@@ -105,7 +106,8 @@ class InstrumentationTest {
     void timeEntriesPage_containsDash0WebSdk() throws Exception {
         HttpURLConnection conn = openGet("/time-entries");
         String body = readBody(conn);
-        assertTrue(body.contains("dash0-sdk-web"), "Time entries page should include Dash0 Web SDK script");
+        assertTrue(body.contains("dash0(\"init\""), "Time entries page should include Dash0 Web SDK init call");
+        assertTrue(body.contains("unpkg.com/@dash0/sdk-web"), "Time entries page should load Dash0 SDK from unpkg");
         conn.disconnect();
     }
 
@@ -113,7 +115,8 @@ class InstrumentationTest {
     void povsPage_containsDash0WebSdk() throws Exception {
         HttpURLConnection conn = openGet("/povs");
         String body = readBody(conn);
-        assertTrue(body.contains("dash0-sdk-web"), "POVs page should include Dash0 Web SDK script");
+        assertTrue(body.contains("dash0(\"init\""), "POVs page should include Dash0 Web SDK init call");
+        assertTrue(body.contains("unpkg.com/@dash0/sdk-web"), "POVs page should load Dash0 SDK from unpkg");
         conn.disconnect();
     }
 

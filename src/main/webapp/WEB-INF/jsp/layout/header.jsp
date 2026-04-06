@@ -7,9 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SC-Tools - ${param.pageTitle != null ? param.pageTitle : 'Solution Consultant Tools'}</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
-    <script src="https://cdn.dash0.com/sdk-web/latest/dash0-sdk-web.min.js"
-            data-dash0-otel-collector-url="http://localhost:4318"
-            data-dash0-service-name="sc-tools-frontend"></script>
+    <script>
+    (function(d,a,s,h,z,e,r,o){d[a]||((z=d[a]=function(){h.push(arguments)}),(z._t=new Date()),(z._v=1),(h=z._q=[]))})(window,"dash0");
+    dash0("init", {
+        serviceName: "sc-tools-frontend",
+        endpoint: {
+            url: "http://localhost:4318"
+        }
+    });
+    </script>
+    <script defer crossorigin="anonymous" src="https://unpkg.com/@dash0/sdk-web/dist/dash0.iife.js"></script>
 </head>
 <body>
     <header class="site-header">
