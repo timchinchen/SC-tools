@@ -1,0 +1,34 @@
+{
+  "featureId": "time-entry-edit-delete",
+  "reviewedAt": "2026-04-06T13:45:00.000Z",
+  "commitId": "02b2a3a",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid implementation of edit and delete functionality for TimeEntryServlet. The code is well-structured with shared validation logic extracted into helper methods (extractAndValidateFormData, setFormErrorAttributes, FormData inner class). All eight expected behaviors from the feature description are implemented and tested. Edit GET pre-populates all fields including correct Activity Type selection. Edit POST validates identically to create and redirects on success (PRG). Delete POST checks existence before deleting and redirects. Non-existent/invalid IDs consistently return 404 via sendError() with no stack traces. Form.jsp dynamically switches between create and edit modes. List.jsp (from prior feature) already had edit links and delete forms with JS confirm(). 29 new integration tests provide thorough coverage.",
+    "issues": [
+      {
+        "file": "src/main/webapp/WEB-INF/jsp/time-entries/form.jsp",
+        "line": 24,
+        "severity": "non_blocking",
+        "description": "The <c:choose>/<c:when> block opens a <form> tag inside conditional branches (lines 25 and 28) but the closing </form> tag is on line 80 outside the conditional. While this works correctly at the HTML output level (JSP generates text), it can confuse IDEs and HTML validators. A cleaner approach would be to compute the action URL as a <c:set> variable and use a single <form> tag with the computed URL."
+      },
+      {
+        "file": "src/main/java/com/dash0/sctools/servlet/TimeEntryServlet.java",
+        "line": 227,
+        "severity": "non_blocking",
+        "description": "Minor TOCTOU (time-of-check-time-of-use) in handleDelete: findById is called to check existence, then delete is called separately. If the entry were deleted concurrently between these two calls, the delete would silently succeed (deleting 0 rows). Not a practical issue for this single-threaded embedded Jetty app, but the DAO's delete() could return a boolean indicating whether a row was actually deleted for more robust handling."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The java-servlet-worker skill says 'Write tests FIRST (Red phase)' but for integration tests using the embedded Jetty HTTP test harness, tests require the servlet endpoints to exist first since they make real HTTP calls. The worker implemented production code first then wrote tests, which is the practical approach. The worker noted this in skillFeedback.suggestedChanges. The skill's TDD guidance should be nuanced to allow implementation-first for integration tests that hit real HTTP endpoints.",
+      "evidence": "Transcript skeleton shows: worker read feature, read existing code, then implemented servlet changes via Edit tool, then wrote tests. skillFeedback.suggestedChanges: 'The skill says Write tests FIRST (Red phase) but for integration tests with embedded Jetty, it\u2019s more practical to implement the servlet handlers first since tests need actual HTTP endpoints.'"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature passes review. The implementation fully covers all eight expected behaviors: edit GET with pre-populated form (including correct Activity Type selection), edit POST with shared validation, delete POST via POST method with JS confirm, and graceful 404 handling for non-existent IDs. Code quality is good with proper refactoring of shared validation logic, consistent PRG pattern usage, XSS prevention via <c:out>, and no stack trace exposure. 29 well-targeted integration tests cover happy paths, validation errors, edge cases, and error handling. Two non-blocking style/design observations noted. One skill observation about TDD guidance for integration tests."
+}

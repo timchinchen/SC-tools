@@ -1,0 +1,50 @@
+{
+  "featureId": "project-scaffolding",
+  "reviewedAt": "2026-04-06T12:45:00.000Z",
+  "commitId": "c4e5d12",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid project scaffolding implementation that covers all feature requirements. The commit creates 14 files including pom.xml with all required dependencies (Jetty 11, H2, JSTL, JUnit 5, Maven Shade), Application.java with embedded Jetty on port 8090 and JSP/JSTL initialization, DatabaseInitializer creating all 3 tables (time_entries, povs, pov_criteria) with proper FK constraints and IF NOT EXISTS idempotency, base JSP layout with header/footer/nav, responsive CSS, and 9 passing tests. The fat JAR build and runtime were verified. The embedded Jetty JSP setup (JspStarter lifecycle bean, TLD scanning patterns, parent classloader priority) is well-engineered for both development and packaged modes.",
+    "issues": [
+      {
+        "file": "src/main/webapp/WEB-INF/jsp/layout/header.jsp",
+        "line": 8,
+        "severity": "non_blocking",
+        "description": "Raw EL expression `${param.pageTitle}` in <title> tag violates AGENTS.md convention ('ALWAYS use <c:out> or fn:escapeXml() — never raw EL in HTML output'). While `param.pageTitle` is set via <jsp:param> from including JSPs and the pages are under WEB-INF (not directly accessible), the EL `param` scope also picks up request query parameters. An attacker could theoretically craft a URL with `?pageTitle=<script>...` and if a vulnerable page forwarded to header.jsp, this could be XSS. Low risk in practice but should use `fn:escapeXml(param.pageTitle)` for defense-in-depth."
+      },
+      {
+        "file": "src/test/java/com/dash0/sctools/ApplicationTest.java",
+        "line": 72,
+        "severity": "non_blocking",
+        "description": "testRootRedirectsToDashboard asserts `statusCode == 302 || statusCode == 200` which is overly permissive. The feature specifies root redirects to /dashboard, so only 302 should be the expected status. Accepting 200 could mask a broken redirect if the root happened to serve content directly."
+      },
+      {
+        "file": "src/main/webapp/index.jsp",
+        "line": 3,
+        "severity": "non_blocking",
+        "description": "Uses a JSP scriptlet `<% response.sendRedirect(...) %>` instead of JSTL or EL. While functional, this is inconsistent with the JSTL-first convention in AGENTS.md. Minor since this is a simple redirect and the RootRedirectServlet handles the actual '/' mapping."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md rule 'never raw EL ${...} in HTML output' is very broad. In practice, ${pageContext.request.contextPath} is used in href attributes throughout all JSP pages (header.jsp, dashboard.jsp) and is safe since it's server-controlled. The convention could clarify that contextPath in attribute values is acceptable, while user-derived values (param.*, requestScope attributes from user input) must always be escaped.",
+      "evidence": "header.jsp:10 uses ${pageContext.request.contextPath}/dashboard in href; dashboard.jsp:14 uses ${pageContext.request.contextPath}/time-entries. These are safe but technically violate the literal reading of the convention."
+    },
+    {
+      "area": "skills",
+      "observation": "The java-servlet-worker skill mandates TDD (write tests first, red phase) but the worker noted this is impractical for project scaffolding since the entire infrastructure must exist before tests can be written. The worker's skillFeedback.suggestedChanges flags this. The skill could add a note that the initial scaffolding feature is exempt from strict Red-Green-Refactor since there's no preexisting test infrastructure.",
+      "evidence": "Skill SKILL.md step 3 says 'Write tests FIRST (Red phase)'. Handoff skillFeedback.suggestedChanges: 'for project scaffolding where the entire infrastructure needs to exist first, creating the production code alongside tests was more practical'. followedProcedure is true, deviation was justified."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The embedded Jetty JSP initialization pattern (JspStarter lifecycle bean, JettyJasperInitializer, ContainerIncludeJarPattern, parentLoaderPriority, webapp resource resolution for both dev and fat JAR modes) is non-trivial and required significant setup. This pattern knowledge could be documented in architecture.md to help future workers understand why Application.java is structured this way and avoid regressions.",
+      "evidence": "Application.java lines 87-129: JspStarter inner class, TLD scanning attributes, classpath webapp directory resolution. This is a known complexity point for embedded Jetty + JSP setups."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The project-scaffolding feature fully meets all requirements: Maven project with all specified dependencies, embedded Jetty on port 8090 with JSP/JSTL support, H2 file-based database at ./data/sctools with 3 auto-created tables (time_entries, povs, pov_criteria), base JSP layout with nav header linking to /dashboard, /time-entries, /povs, static CSS, and Maven Shade fat JAR. 9 tests pass covering database schema, server lifecycle, JSP rendering, routing, and static assets. Three non-blocking issues found: raw EL in header.jsp title (minor XSS convention violation), overly permissive redirect test assertion, and scriptlet in index.jsp. The implementation quality is high with proper error handling, graceful shutdown, and dual-mode (dev/JAR) webapp resolution."
+}

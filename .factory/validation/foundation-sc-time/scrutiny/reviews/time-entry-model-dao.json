@@ -1,0 +1,40 @@
+{
+  "featureId": "time-entry-model-dao",
+  "reviewedAt": "2026-04-06T12:00:00.000Z",
+  "commitId": "5cc624f",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid implementation of TimeEntry model, ActivityType enum, and TimeEntryDao with full CRUD operations. All 9 ActivityType enum values are present. TimeEntry model has all required fields with proper getters/setters. TimeEntryDao uses PreparedStatement throughout, proper try-with-resources for connection management, good error handling with logging, and correct mapRow() with null-safe reads. The test suite has 19 comprehensive tests covering all CRUD operations, ordering, edge cases (null description, non-existent IDs), all activity types, decimal precision, and SQL injection safety. The implementation matches all expectedBehavior items in the feature spec.",
+    "issues": [
+      {
+        "file": "src/main/java/com/dash0/sctools/dao/TimeEntryDao.java",
+        "line": 55,
+        "severity": "non_blocking",
+        "description": "findAll() orders by date DESC only. When multiple entries share the same date, row order is non-deterministic. A secondary sort (e.g., ORDER BY date DESC, id DESC) would make results fully deterministic. Not a spec violation since the spec only requires 'ordered by date DESC'."
+      },
+      {
+        "file": "src/main/java/com/dash0/sctools/dao/TimeEntryDao.java",
+        "line": 130,
+        "severity": "non_blocking",
+        "description": "update() does not check the number of affected rows. If the ID doesn't exist, the update silently does nothing. Returning a boolean or throwing on zero affected rows would be more explicit, but the spec doesn't require it and delete() has the same pattern."
+      },
+      {
+        "file": "src/test/java/com/dash0/sctools/dao/TimeEntryDaoTest.java",
+        "line": 221,
+        "severity": "non_blocking",
+        "description": "update_setsUpdatedAtToNewTimestamp uses Thread.sleep(50) to ensure timestamp difference. This is a pragmatic but potentially flaky approach in CI. The assertion is lenient (isAfter || isEqual) which mitigates most risk."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md states 'Write tests BEFORE implementation (TDD)' as a testing convention. The worker created model, DAO, and tests together in a single pass rather than writing failing tests first. The worker's skill feedback notes this deviation and justifies it: 'for a DAO-only feature without servlets/JSPs, it's more efficient to create model + DAO + tests together since the test compilation depends on the production classes.' This is a valid point — strict TDD red-green-refactor is impractical for DAO features where test classes can't compile without the production model/DAO classes. AGENTS.md or the skill could acknowledge this nuance.",
+      "evidence": "Transcript skeleton shows Create tool calls for ActivityType.java, TimeEntry.java, TimeEntryDao.java, and TimeEntryDaoTest.java in sequence without an intermediate 'mvn test' for the red phase. skillFeedback.followedProcedure is true but suggestedChanges notes the TDD deviation."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature time-entry-model-dao passes review. The implementation fully covers all requirements: ActivityType enum with 9 values, TimeEntry model with all specified fields, and TimeEntryDao with findAll (date DESC), findById (returns null for missing), create (sets both timestamps), update (refreshes updatedAt), and delete — all using PreparedStatement. The 19-test JUnit 5 suite is comprehensive, covering happy paths, edge cases, all enum values, decimal precision, and SQL injection safety. Three non-blocking observations noted: non-deterministic ordering for same-date entries, silent no-op on update/delete of non-existent IDs, and a Thread.sleep in a timestamp test. One shared state observation about TDD convention applicability for DAO-only features."
+}

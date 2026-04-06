@@ -1,0 +1,45 @@
+{
+  "featureId": "time-entry-list-page",
+  "reviewedAt": "2026-04-06T13:45:00.000Z",
+  "commitId": "ae3964b",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation fully covers all feature requirements. TimeEntryServlet correctly handles GET /time-entries by querying TimeEntryDao.findAll() and forwarding to list.jsp. The JSP properly renders a table with all 7 required columns when entries exist, or the 'No time entries yet.' empty-state message when no entries exist. XSS prevention is properly implemented via <c:out>, hours use fmt:formatNumber with maxFractionDigits=2, dates render in YYYY-MM-DD via LocalDate.toString(), and activity types display human-readable names via ActivityType.getDisplayName(). The 'Add New Time Entry' button links to ?action=new. Edit/Delete actions are present per row. The servlet is registered in Application.java. 13 JUnit 5 integration tests cover HTTP status, content type, empty state, populated table, column rendering, hours formatting, activity type display, XSS protection, navigation, and page structure. All tests pass. The code follows existing conventions and patterns in the codebase.",
+    "issues": [
+      {
+        "file": "src/test/java/com/dash0/sctools/servlet/TimeEntryServletTest.java",
+        "line": 105,
+        "severity": "non_blocking",
+        "description": "Test 'getTimeEntries_withEntries_showsTable' does not insert any data before asserting. It only checks that the page contains 'Time Entries' heading, which is always present regardless of data. The test name suggests it verifies table rendering with entries, but it doesn't actually test that. Similarly 'getTimeEntries_containsTableHeaders' (line 117) doesn't add data to verify headers appear. These are weak/redundant tests that pass regardless of table rendering correctness. The actual data-driven verification is handled well by the 'getTimeEntries_withData_showsTableWithEntryValues' test."
+      },
+      {
+        "file": "src/test/java/com/dash0/sctools/servlet/TimeEntryServletTest.java",
+        "line": 37,
+        "severity": "non_blocking",
+        "description": "Integration tests use the production file-based H2 database (via DatabaseInitializer.initialize() and production TimeEntryDao) rather than an in-memory H2 instance. While the setUp() method cleans the time_entries table before each test, this approach modifies the production database file (./data/sctools.mv.db). AGENTS.md suggests 'DAO tests use in-memory H2' — servlet integration tests with embedded Jetty are a reasonable exception, but this pattern could cause issues if the app is running simultaneously during test execution."
+      },
+      {
+        "file": "src/main/java/com/dash0/sctools/servlet/TimeEntryServlet.java",
+        "line": 21,
+        "severity": "non_blocking",
+        "description": "The @WebServlet annotation is redundant since the servlet is registered programmatically in Application.registerServlets(). Not a bug — it serves as documentation — but it could cause confusion if Jetty's annotation scanning is ever enabled, potentially causing double registration."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The skill procedure says 'Write tests FIRST (Red phase)' but the worker wrote the servlet + JSP first, then tests. Worker's skillFeedback acknowledges this with a reasonable justification: integration tests requiring server + JSP rendering make a strict Red phase impractical since JSP compilation errors prevent meaningful test failure signals. The skill procedure may need an exception/clarification for integration tests that depend on JSP compilation.",
+      "evidence": "Transcript skeleton shows Create tool calls for TimeEntryServlet.java and list.jsp BEFORE TimeEntryServletTest.java. skillFeedback.followedProcedure=true with suggestedChanges noting the TDD deviation for integration tests."
+    },
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md states 'Servlet tests use mock request/response or embedded Jetty test harness' and 'DAO tests use in-memory H2'. The worker used embedded Jetty with production file-based H2 for servlet integration tests. This works but establishes a pattern where servlet tests touch the production DB. Future workers may follow this pattern. AGENTS.md could clarify whether servlet integration tests should use in-memory H2 or if production DB access is acceptable for integration testing.",
+      "evidence": "TimeEntryServletTest.java setUp() calls DatabaseInitializer.initialize() (production DB) and creates a production TimeEntryDao(). Contrast with TimeEntryDaoTest.java which uses jdbc:h2:mem:test."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS — The time-entry-list-page feature is well-implemented. All 7 expected behaviors are satisfied: GET /time-entries returns 200, table has correct columns, empty state shows 'No time entries yet.', Add New button is visible, Edit/Delete actions per row, human-readable activity types, hours with max 2 decimal places. The code follows project conventions (JSTL, c:out for XSS, PRG pattern). 13 JUnit 5 tests provide good coverage. Three non-blocking issues noted: two weakly-named tests that don't actually verify what their names suggest (but actual data-driven tests exist and are thorough), servlet integration tests using production DB instead of in-memory H2, and a redundant @WebServlet annotation."
+}

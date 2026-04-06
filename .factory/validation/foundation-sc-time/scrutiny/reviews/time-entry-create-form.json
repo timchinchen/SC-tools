@@ -1,0 +1,39 @@
+{
+  "featureId": "time-entry-create-form",
+  "reviewedAt": "2026-04-06T14:30:00.000Z",
+  "commitId": "6989bc7",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid implementation of the time entry create form feature. The servlet correctly handles GET /time-entries?action=new (serving the empty form) and POST /time-entries (validating and creating entries). All 6 form fields are present with correct input types. Server-side validation covers all required fields, hours numeric/range validation (>0, <=24), and date format. On validation failure, the form is re-rendered with error messages and all previously entered values are preserved via request attributes. On success, the PRG pattern is correctly followed with a 302 redirect to /time-entries. The JSP uses <c:out> for all user-controlled output. 23 comprehensive JUnit 5 integration tests cover form display, valid creation paths (including decimal hours and boundary case hours=24), all validation failure scenarios, input preservation, and XSS escaping. No blocking issues found.",
+    "issues": [
+      {
+        "file": "src/main/webapp/WEB-INF/jsp/time-entries/form.jsp",
+        "line": 55,
+        "severity": "non_blocking",
+        "description": "The Activity Type dropdown option value uses raw EL: value=\"${type.name()}\". While this is safe because it outputs Java enum constant names (e.g., 'DEMO', 'DISCOVERY') which are server-controlled and can never contain user input, it technically deviates from the AGENTS.md convention of 'ALWAYS use <c:out> ... never raw EL ${...} in HTML output'. This is a common and acceptable pattern for enum values, but documenting this exception in conventions would reduce future reviewer confusion."
+      },
+      {
+        "file": "src/main/webapp/WEB-INF/jsp/time-entries/form.jsp",
+        "line": 3,
+        "severity": "non_blocking",
+        "description": "The original commit (6989bc7) hardcoded the page title as 'New Time Entry' in the jsp:param. This was later refactored in the edit/delete feature (02b2a3a) to use a formMode conditional. Not an issue for this feature's scope, but the initial version didn't set formMode in showCreateForm(), which would have been needed if the form.jsp used formMode-based logic. The later commit properly set formMode='create'."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "Worker noted that strict TDD (Red phase: write tests first that fail) is impractical for servlet integration tests that use embedded Jetty + JSP rendering, since both the JSP template and servlet endpoint must exist for the integration test to compile and run. The java-servlet-worker skill says 'Write tests FIRST (Red phase)' but doesn't clarify how to handle integration tests where the test target includes JSP rendering. Skill should clarify that for integration tests, the TDD cycle may involve creating skeleton implementations first.",
+      "evidence": "Handoff skillFeedback.suggestedChanges: 'The skill says Write tests FIRST (Red phase) but for integration tests that require embedded Jetty + JSP rendering, both the JSP template and servlet code need to exist for tests to even compile and run.' Transcript shows worker created form.jsp and servlet code before/alongside tests."
+    },
+    {
+      "area": "conventions",
+      "observation": "The use of raw EL expressions for server-controlled values (enum names, context path) in JSP is a common pattern but AGENTS.md states 'never raw EL ${...} in HTML output' without exception. Consider adding a clarification that server-controlled values (enum constants, context paths) are acceptable to use with raw EL, to avoid workers spending time wrapping every EL expression in <c:out> when it's unnecessary.",
+      "evidence": "form.jsp line 55: value=\"${type.name()}\" and line 68: href=\"${pageContext.request.contextPath}/time-entries\" — both are server-controlled values where <c:out> is technically not needed for security."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature time-entry-create-form passes review. The implementation fully covers all requirements: GET /time-entries?action=new returns a 200 with a complete form (6 fields, correct input types, 9 activity type options), POST with valid data creates and redirects 302, POST with invalid data re-renders with errors and preserved input, hours validation correctly enforces >0 and <=24, and all JSP output uses <c:out> for XSS prevention. The 23 JUnit 5 integration tests provide thorough coverage including boundary cases (hours=24, decimal hours), all validation error paths, input preservation, and XSS escaping. Two non-blocking observations: raw EL for enum values in the dropdown (safe but technically violates stated convention), and a minor note about TDD approach for integration tests."
+}

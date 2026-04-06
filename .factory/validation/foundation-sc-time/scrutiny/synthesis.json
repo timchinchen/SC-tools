@@ -1,0 +1,45 @@
+{
+  "milestone": "foundation-sc-time",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "mvn clean test", "exitCode": 0 },
+    "typecheck": { "passed": true, "command": "mvn clean test", "exitCode": 0 },
+    "lint": { "passed": true, "command": "mvn clean package -q -DskipTests", "exitCode": 0 }
+  },
+  "reviewsSummary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "skills",
+      "suggestion": "Update java-servlet-worker skill TDD guidance to clarify that strict Red-Green-Refactor is not required for: (1) project scaffolding features where no test infrastructure exists yet, (2) servlet integration tests that require JSP compilation and live HTTP endpoints. For these cases, implementation-first with comprehensive tests afterward is the practical approach.",
+      "evidence": "All 5 features in foundation-sc-time had workers noting this deviation. project-scaffolding: no test infra exists yet. time-entry-model-dao: test compilation depends on production model classes. time-entry-list-page, time-entry-create-form, time-entry-edit-delete: integration tests require live JSP and Jetty endpoints. All workers' skillFeedback.suggestedChanges flag this consistently.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Clarify the XSS prevention convention to distinguish between user-controlled values (MUST use <c:out> or fn:escapeXml) and server-controlled values (enum constants via ${type.name()}, context path via ${pageContext.request.contextPath}) where raw EL is safe. Current wording 'ALWAYS use <c:out> ... never raw EL ${...} in HTML output' is too broad and causes unnecessary convention violations for safe patterns.",
+      "evidence": "project-scaffolding: raw EL for ${param.pageTitle} in header.jsp (this one IS a real minor concern). time-entry-create-form: raw EL for ${type.name()} enum values in dropdown (safe). time-entry-edit-delete: same pattern. 3 of 5 features flagged this same convention ambiguity.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add guidance on integration test database strategy: servlet integration tests using embedded Jetty may use the file-based H2 database (production DatabaseInitializer) with table cleanup in @BeforeEach, since they need the full application context. DAO unit tests should continue using in-memory H2 (jdbc:h2:mem:test). Note the risk of running tests while the app is running (shared DB file).",
+      "evidence": "time-entry-list-page review noted TimeEntryServletTest uses production file-based H2 via DatabaseInitializer.initialize() while TimeEntryDaoTest correctly uses jdbc:h2:mem:test. This is a reasonable pattern for integration tests but AGENTS.md only says 'DAO tests use in-memory H2' without addressing servlet integration tests.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Embedded Jetty JSP initialization pattern should be documented in architecture.md",
+      "reason": "While useful knowledge, no architecture.md file exists in the project and creating one is outside the scope of this validation. The pattern is well-commented in Application.java itself."
+    }
+  ],
+  "previousRound": null
+}
