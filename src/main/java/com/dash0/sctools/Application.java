@@ -2,6 +2,7 @@ package com.dash0.sctools;
 
 import com.dash0.sctools.servlet.DashboardServlet;
 import com.dash0.sctools.servlet.RootRedirectServlet;
+import com.dash0.sctools.servlet.TimeEntryServlet;
 import com.dash0.sctools.util.DatabaseInitializer;
 import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
 import org.eclipse.jetty.server.Server;
@@ -129,6 +130,7 @@ public class Application {
      */
     static void registerServlets(WebAppContext webapp) {
         webapp.addServlet(new ServletHolder("dashboard", DashboardServlet.class), "/dashboard");
+        webapp.addServlet(new ServletHolder("timeEntries", TimeEntryServlet.class), "/time-entries");
         webapp.addServlet(new ServletHolder("root", RootRedirectServlet.class), "");
     }
 
