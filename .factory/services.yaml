@@ -1,0 +1,27 @@
+commands:
+  install: brew install openjdk@21 maven 2>/dev/null; mvn dependency:resolve -q
+  build: mvn clean package -q -DskipTests
+  test: mvn clean test
+  package: mvn clean package
+
+services:
+  app:
+    start: java -jar target/sc-tools-1.0-SNAPSHOT.jar &
+    stop: lsof -ti :8090 | xargs kill -9 2>/dev/null || true
+    healthcheck: curl -sf http://localhost:8090/dashboard
+    port: 8090
+    depends_on: []
+
+  app-with-agent:
+    start: java -javaagent:lib/opentelemetry-javaagent.jar -Dotel.service.name=sc-tools -Dotel.exporter.otlp.endpoint=http://localhost:4317 -Dotel.exporter.otlp.protocol=grpc -jar target/sc-tools-1.0-SNAPSHOT.jar &
+    stop: lsof -ti :8090 | xargs kill -9 2>/dev/null || true
+    healthcheck: curl -sf http://localhost:8090/dashboard
+    port: 8090
+    depends_on: []
+
+  otel-collector:
+    start: echo "Pre-existing service - do not start"
+    stop: echo "Pre-existing service - do not stop"
+    healthcheck: curl -sf http://localhost:13133/
+    port: 4317
+    depends_on: []
