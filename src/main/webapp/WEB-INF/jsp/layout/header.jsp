@@ -12,7 +12,8 @@
     dash0("init", {
         serviceName: "sc-tools-frontend",
         endpoint: {
-            url: "http://localhost:4318"
+            url: "https://ingress.europe-west4.gcp.dash0.com",
+            authToken: "REPLACE_WITH_YOUR_DASH0_AUTH_TOKEN"
         }
     });
     </script>

@@ -97,7 +97,7 @@ class InstrumentationTest {
         String body = readBody(conn);
         assertTrue(body.contains("dash0(\"init\""), "Dashboard page should include Dash0 Web SDK init call");
         assertTrue(body.contains("sc-tools-frontend"), "SDK should have service name configured");
-        assertTrue(body.contains("localhost:4318"), "SDK should have collector URL configured");
+        assertTrue(body.contains("ingress.europe-west4.gcp.dash0.com"), "SDK should have Dash0 endpoint configured");
         assertTrue(body.contains("unpkg.com/@dash0/sdk-web"), "Dashboard page should load Dash0 SDK from unpkg");
         conn.disconnect();
     }
