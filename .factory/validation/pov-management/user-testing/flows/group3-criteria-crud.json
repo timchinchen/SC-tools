@@ -1,0 +1,36 @@
+{
+  "groupId": "group3-criteria-crud",
+  "testedAt": "2026-04-06T15:03:00Z",
+  "isolation": {
+    "appUrl": "http://localhost:8090",
+    "tool": "curl",
+    "dataPrefix": "G3-",
+    "database": "shared H2"
+  },
+  "toolsUsed": ["curl"],
+  "assertions": {
+    "VAL-POV-005": {
+      "status": "pass",
+      "evidence": "1) POV detail page contains 'Add Criteria' link pointing to /criteria?action=new&povId=1. 2) Criteria form at /criteria?action=new&povId=1 has fields: Name (text, required), Description (textarea, optional), Status (select with 5 options: NOT_STARTED selected by default, IN_PROGRESS, MET, NOT_MET, PARTIALLY_MET), Weight (select 1-5, required), Notes (textarea, optional). 3) POST to /criteria?povId=1 with valid data returned HTTP 302 redirect to /povs?action=detail&id=1. 4) POV detail page shows 'G3-TestCriterion1' with badge 'Not Started'.",
+      "details": "All form fields present and correctly configured. Form method=post, action=/criteria?povId=1. Status dropdown defaults to NOT_STARTED. Weight is a select with options 1-5. Redirect after successful submit goes to POV detail page. Criterion visible in criteria table on detail page."
+    },
+    "VAL-POV-006": {
+      "status": "pass",
+      "evidence": "1) POST with empty name: HTTP 200 (re-rendered form) with error 'Name is required.' in error-summary div. 2) POST with weight=0: HTTP 200 with error 'Weight must be between 1 and 5.' — name value preserved in form. 3) POST with weight=6: HTTP 200 with error 'Weight must be between 1 and 5.' — name value preserved in form. No redirects occurred for invalid data (all returned 200, not 302).",
+      "details": "Server-side validation works correctly. Empty name triggers 'Name is required.' error. Weight=0 and weight=6 both trigger 'Weight must be between 1 and 5.' error. Form preserves previously entered values on validation failure (confirmed name field retained value). Description and Notes are optional — valid submission succeeded without them."
+    },
+    "VAL-POV-008": {
+      "status": "pass",
+      "evidence": "1) Edit form at /criteria?action=edit&id=1&povId=1 loaded with pre-populated values: name='G3-TestCriterion1', status=NOT_STARTED selected, weight=3 selected. 2) POST to edit with status changed to MET, name to 'G3-TestCriterion1-Updated', weight to 4: returned HTTP 302 redirect to /povs?action=detail&id=1. 3) POV detail page shows updated criterion: name='G3-TestCriterion1-Updated', badge='Met' (badge-met class).",
+      "details": "Edit form correctly pre-populates all fields. Status change from NOT_STARTED to MET persisted correctly. Name and weight updates also persisted. Redirect after edit goes to POV detail page."
+    },
+    "VAL-POV-010": {
+      "status": "pass",
+      "evidence": "1) Created second criterion 'G3-ToBeDeleted' (id=4) on POV id=1. 2) POST to /criteria?action=delete&id=4&povId=1 returned HTTP 302 redirect to /povs?action=detail&id=1. 3) POV detail page: 'G3-ToBeDeleted' no longer present (grep count=0). 4) Parent POV 'G3-CritTestPOV' still exists with h2 heading visible. 5) Remaining criterion 'G3-TestCriterion1-Updated' still present on detail page.",
+      "details": "Delete via POST with action=delete removes only the targeted criterion. Parent POV unaffected. Other criteria on the same POV unaffected. Delete form uses onsubmit='return confirm(...)' for browser confirmation dialog."
+    }
+  },
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 4 assertions: all 4 passed. VAL-POV-005 (add criteria), VAL-POV-006 (criteria validation), VAL-POV-008 (edit criteria), VAL-POV-010 (delete criteria) all working correctly."
+}

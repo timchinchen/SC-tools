@@ -74,3 +74,40 @@ DEMO, DISCOVERY, POV_WORK, TECHNICAL_DEEP_DIVE, WORKSHOP, INTERNAL, TRAINING, AD
 - For non-existent ID: navigate to /time-entries?action=edit&id=99999 and verify 404 or friendly error page
 - POST forms: verify form method="post" in DOM
 - XSS: all user text should be HTML-escaped in output (use <c:out> in JSP)
+
+## Flow Validator Guidance: curl
+
+### Environment
+- App URL: http://localhost:8090
+- Tool: `curl` (all assertions tested via HTTP requests)
+- No authentication required — all pages are public
+- Use `-L` to follow redirects, `-D -` to dump headers, `-s` for silent mode
+
+### Key URLs for POV Management
+- POV List: http://localhost:8090/povs
+- POV Create Form: http://localhost:8090/povs?action=new
+- POV Detail: http://localhost:8090/povs?action=detail&id={id}
+- POV Edit Form: http://localhost:8090/povs?action=edit&id={id}
+- Criteria Create: http://localhost:8090/criteria?action=new&povId={id}
+- Criteria Edit: http://localhost:8090/criteria?action=edit&id={id}&povId={povId}
+- Dashboard: http://localhost:8090/dashboard
+
+### POV Status Enum
+PLANNED, IN_PROGRESS, COMPLETED, WON, LOST, CANCELLED
+
+### Criteria Status Enum
+NOT_STARTED, IN_PROGRESS, MET, NOT_MET, PARTIALLY_MET
+
+### Testing Patterns
+- **Create POV via POST**: `curl -s -D - -X POST http://localhost:8090/povs -d "name=TestPOV&accountName=TestCorp&scName=TestSC&status=PLANNED&startDate=2026-01-01&targetEndDate=2026-06-30&description=Test"`
+- **Follow redirect to get created ID**: Look for Location header after POST 302 redirect
+- **Verify HTML content**: Pipe curl output through grep to check for expected text
+- **Check empty state**: Before creating any data, verify POV list shows empty message
+- **XSS test**: Submit `<script>alert(1)</script>` as name and verify it's escaped in output (shows &lt; instead of <)
+- **SQL injection test**: Submit `'; DROP TABLE povs; --` and verify no error occurs
+
+### Isolation Rules
+- **Shared H2 database**: All validators share the same database
+- **Empty state group MUST run first**: Before any other validator creates data
+- **Data identification**: Use unique prefixes in names (e.g., "G2-TestPOV", "G3-CritPOV")
+- **Order matters**: Group 1 (empty state) → then Groups 2-5 can run in parallel if using unique data

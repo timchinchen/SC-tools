@@ -1,0 +1,46 @@
+{
+  "groupId": "group2-pov-crud",
+  "testedAt": "2026-04-06T15:01:30Z",
+  "isolation": {
+    "appUrl": "http://localhost:8090",
+    "tool": "curl",
+    "dataPrefix": "G2-",
+    "database": "shared H2"
+  },
+  "toolsUsed": ["curl"],
+  "assertions": {
+    "VAL-POV-002": {
+      "status": "pass",
+      "evidence": "GET /povs?action=new returns 200 with form containing all required fields: Name (text, required), Account Name (text, required), SC Name (text, required), Status (select with 6 options: PLANNED selected, IN_PROGRESS, COMPLETED, WON, LOST, CANCELLED), Start Date (date, required), Target End Date (date, required), Description (textarea, not required). POST with empty body returns 200 with error-summary listing: 'Name is required.', 'Account Name is required.', 'SC Name is required.', 'Start Date is required.', 'Target End Date is required.' POST with targetEndDate before startDate returns 200 with error: 'Target End Date must not be before Start Date.' and preserves entered values in form (confirmed G2-DateTest preserved in name field).",
+      "details": "All form fields present with correct types and required attributes. Status dropdown defaults to PLANNED with all 6 options. Server-side validation catches empty required fields and invalid date ranges. Form re-renders with preserved input on validation failure."
+    },
+    "VAL-POV-003": {
+      "status": "pass",
+      "evidence": "POST /povs with valid data (name=G2-TestPOV, accountName=G2-Acme Corp, scName=G2-John Smith, status=PLANNED, startDate=2026-04-01, targetEndDate=2026-09-30, description=G2 test description) returns HTTP 302 Found with Location: http://localhost:8090/povs. Subsequent GET /povs confirms G2-TestPOV appears in list with correct values: name 'G2-TestPOV', account 'G2-Acme Corp', SC 'G2-John Smith', status 'Planned'.",
+      "details": "PRG pattern correctly implemented. 302 redirect to list page after successful creation. New POV visible in list immediately."
+    },
+    "VAL-POV-004": {
+      "status": "pass",
+      "evidence": "GET /povs?action=detail&id=2 returns 200 with full POV detail page showing: title 'G2-TestPOV', Account Name 'G2-Acme Corp', SC Name 'G2-John Smith', Status with badge (class='badge badge-planned', text='Planned'), Start Date '2026-04-01', Target End Date '2026-09-30', Description 'G2 test description'. Criteria section present with heading 'Criteria', 'Add Criteria' button linking to /criteria?action=new&povId=2, and empty state message 'No criteria defined yet.'",
+      "details": "Detail page shows all POV fields correctly. Status displayed as badge. Criteria section shown with empty state message and Add Criteria button."
+    },
+    "VAL-POV-007": {
+      "status": "pass",
+      "evidence": "POST /povs?action=edit&id=2 with updated values (name=G2-TestPOV-Updated, accountName=G2-Acme Corp Updated, scName=G2-Jane Doe, status=IN_PROGRESS, targetEndDate=2026-12-31, description=G2 updated description) returns HTTP 302 Found with Location: http://localhost:8090/povs?action=detail&id=2. Detail page at /povs?action=detail&id=2 confirms all updated values: 'G2-TestPOV-Updated', 'G2-Acme Corp Updated', 'G2-Jane Doe', 'In Progress', '2026-12-31', 'G2 updated description'. List page at /povs also shows updated values: 'G2-TestPOV-Updated', 'G2-Acme Corp Updated', 'G2-Jane Doe', 'In Progress'.",
+      "details": "Edit with status change from PLANNED to IN_PROGRESS persisted correctly. Both list and detail pages reflect all updated values immediately after redirect."
+    },
+    "VAL-POV-009": {
+      "status": "pass",
+      "evidence": "Created POV 'G2-DeleteMe' (id=7) and added two criteria: G2-Criterion1 (weight=3, NOT_STARTED) and G2-Criterion2 (weight=5, IN_PROGRESS). Both criteria confirmed on detail page. POST /povs?action=delete&id=7 returns HTTP 302 Found with Location: http://localhost:8090/povs. After deletion: (1) GET /povs shows 0 occurrences of 'G2-DeleteMe' (POV removed from list), (2) GET /povs?action=detail&id=7 returns 404 'POV not found', (3) criteria also removed (GET /criteria?action=edit&id=99&povId=7 returns 404 'Criterion not found').",
+      "details": "Delete cascades correctly: POV and all associated criteria removed. POV disappears from list. Attempting to access deleted POV or its criteria returns 404."
+    },
+    "VAL-POV-011": {
+      "status": "pass",
+      "evidence": "GET /povs?action=detail&id=99999 returns HTTP 404 Not Found with response body containing 'Error 404 POV not found.' in a Jetty error page format. Body contains NO occurrences of 'java.lang.', 'NullPointerException', 'Exception', or 'stack.trace' (grep count = 0). Message is user-friendly: 'POV not found.'",
+      "details": "404 returned with friendly error message. No Java stack traces exposed to user. Jetty default error page used with custom message."
+    }
+  },
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 6 assertions: all 6 passed. VAL-POV-002 (form fields + validation), VAL-POV-003 (create + redirect), VAL-POV-004 (detail + criteria empty state), VAL-POV-007 (edit + status change), VAL-POV-009 (delete cascade), VAL-POV-011 (404 friendly error). All POV CRUD operations working correctly with proper PRG pattern, server-side validation, cascade deletion, and error handling."
+}

@@ -1,0 +1,31 @@
+{
+  "groupId": "group1-empty-state",
+  "testedAt": "2026-04-06T14:59:06Z",
+  "isolation": {
+    "appUrl": "http://localhost:8090",
+    "tool": "curl",
+    "databaseState": "empty",
+    "dataCreation": false
+  },
+  "toolsUsed": ["curl"],
+  "assertions": {
+    "VAL-POV-001": {
+      "status": "pass",
+      "evidence": "GET /povs returned HTTP 200. Response body contains '<p class=\"empty-state\">No POVs yet.</p>'. No <table> tag present — empty state message shown instead of an empty table.",
+      "details": "The POV list page correctly shows a user-friendly empty state message 'No POVs yet.' with CSS class 'empty-state'. The page also includes a 'Create New POV' button for discoverability. No table element is rendered when there are no POVs."
+    },
+    "VAL-DASH-001": {
+      "status": "pass",
+      "evidence": "GET /dashboard returned HTTP 200. SC Time section shows '<p class=\"empty-state\">No time entries recorded</p>'. POV section shows '<p class=\"empty-state\">No POVs tracked</p>'. Both sections have navigation links to their respective list pages.",
+      "details": "The dashboard renders two cards in a grid: 'SC Time Tracking' with empty state 'No time entries recorded' and 'POV Management' with empty state 'No POVs tracked'. Each card includes a 'View' button linking to the respective list page. No zero counts displayed — uses descriptive empty state messages instead."
+    },
+    "VAL-CROSS-001": {
+      "status": "pass",
+      "evidence": "GET /dashboard returned HTTP 200. Zero occurrences of error strings (exception, stacktrace, NullPointer, java.lang.). Zero occurrences of literal 'null' text. Zero occurrences of broken UI markers (undefined, NaN, unrendered JSP tags <% %>). Both SC Time and POV sections present with coherent empty states.",
+      "details": "A brand-new visit to the dashboard with an empty database shows a fully coherent page. The page has proper HTML structure, navigation header with links to Dashboard/Time Entries/POVs, two dashboard cards with meaningful empty state messages, and a footer. No errors, no null values, no broken UI elements detected."
+    }
+  },
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 3 assertions: 3 passed, 0 failed. All empty state behaviors work correctly — POV list shows 'No POVs yet.' without a table, dashboard shows separate empty states for SC Time and POV sections, and the overall page is coherent with no errors or null values."
+}

@@ -1,0 +1,57 @@
+{
+  "groupId": "group4-dashboard-data",
+  "testedAt": "2026-04-06T15:03:00Z",
+  "isolation": {
+    "appUrl": "http://localhost:8090",
+    "tool": "curl",
+    "dataPrefix": "G4-",
+    "database": "shared H2"
+  },
+  "toolsUsed": ["curl"],
+  "assertions": {
+    "VAL-DASH-002": {
+      "status": "pass",
+      "evidence": "Dashboard displays 'Total Hours Logged' with value 15.50 and 'Time Entries' count of 3. Created 2 G4- time entries (4.50h + 3.00h = 7.50h) plus pre-existing G5 entry (8.00h) = 15.50h total. The displayed total matches the sum of all time entry hours in the database.",
+      "details": "GET /dashboard returned 200. The SC Time Tracking card contains stat-value elements showing '15.50' for Total Hours Logged and '3' for Time Entries. Verified by cross-checking with GET /time-entries which lists all 3 entries with hours 8.00, 3.00, 4.50 summing to 15.50.",
+      "steps": [
+        {"action": "POST /time-entries with G4-TestSC, 4.50 hours, DEMO", "expected": "302 redirect", "observed": "302 Found, Location: /time-entries"},
+        {"action": "POST /time-entries with G4-TestSC, 3.00 hours, POV_WORK", "expected": "302 redirect", "observed": "302 Found, Location: /time-entries"},
+        {"action": "GET /dashboard", "expected": "Total hours displayed matching sum of all entries", "observed": "stat-value shows 15.50 Total Hours Logged, 3 Time Entries. Matches 4.50 + 3.00 + 8.00 = 15.50"}
+      ]
+    },
+    "VAL-DASH-003": {
+      "status": "pass",
+      "evidence": "Dashboard displays POV status breakdown: Planned: 2, In Progress: 2, Completed: 1, Won: 1, Lost: 0, Cancelled: 0. Total: 6 POVs. Created G4- POVs with IN_PROGRESS, COMPLETED, and WON statuses. Counts match actual database data.",
+      "details": "GET /dashboard shows pov-status-breakdown section with all 6 status categories listed. Created 3 G4- POVs (IN_PROGRESS, COMPLETED, WON). Pre-existing data included 2 PLANNED POVs. All counts correctly reflected in dashboard badge elements.",
+      "steps": [
+        {"action": "POST /povs with G4-TestPOV-InProgress, status=IN_PROGRESS", "expected": "302 redirect", "observed": "302 Found, Location: /povs"},
+        {"action": "POST /povs with G4-TestPOV-Completed, status=COMPLETED", "expected": "302 redirect", "observed": "302 Found, Location: /povs"},
+        {"action": "POST /povs with G4-TestPOV-Won, status=WON", "expected": "302 redirect", "observed": "302 Found, Location: /povs"},
+        {"action": "GET /dashboard", "expected": "Status breakdown with per-status counts", "observed": "Planned: 2, In Progress: 2, Completed: 1, Won: 1, Lost: 0, Cancelled: 0. Total POVs: 6"}
+      ]
+    },
+    "VAL-DASH-004": {
+      "status": "pass",
+      "evidence": "Dashboard HTML contains href='/time-entries' (View Time Entries button) and href='/povs' (View POVs button). Navigation bar also has links to /dashboard, /time-entries, and /povs.",
+      "details": "GET /dashboard response contains 6 navigation links: /dashboard (nav+header), /time-entries (nav+button), /povs (nav+button). Both 'View Time Entries' and 'View POVs' are rendered as <a> tags with class 'btn btn-primary' linking to their respective list pages.",
+      "steps": [
+        {"action": "GET /dashboard and inspect HTML for links", "expected": "Links to /time-entries and /povs present", "observed": "Found href='/time-entries' (nav link + View Time Entries button) and href='/povs' (nav link + View POVs button)"}
+      ]
+    },
+    "VAL-DASH-005": {
+      "status": "pass",
+      "evidence": "Dashboard correctly reflects changes after CRUD operations. Before: 15.50h/3 entries. After creating 2.0h entry: 17.50h/4 entries. After deleting that entry: 15.50h/3 entries. POV counts also updated correctly when other validators created data in parallel.",
+      "details": "Tested create-then-delete cycle. Created G4-TestSC-CRUD time entry (2.0h, id=4). Dashboard updated to 17.50 total hours and 4 entries. Deleted entry id=4 via POST /time-entries?action=delete&id=4 (302 redirect). Dashboard reverted to 15.50 total hours and 3 entries. POV total also tracked changes from 6→7→6 as parallel validators created/modified data.",
+      "steps": [
+        {"action": "GET /dashboard (baseline)", "expected": "Current totals", "observed": "15.50 hours, 3 entries, 6 POVs"},
+        {"action": "POST /time-entries with G4-TestSC-CRUD, 2.0 hours", "expected": "302 redirect, entry created", "observed": "302 Found, Location: /time-entries"},
+        {"action": "GET /dashboard (after create)", "expected": "Hours increased by 2.0", "observed": "17.50 hours, 4 entries (correct: +2.0h, +1 entry)"},
+        {"action": "POST /time-entries?action=delete&id=4", "expected": "302 redirect, entry deleted", "observed": "302 Found, Location: /time-entries"},
+        {"action": "GET /dashboard (after delete)", "expected": "Hours decreased by 2.0", "observed": "15.50 hours, 3 entries (correct: reverted to pre-create values)"}
+      ]
+    }
+  },
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 4 assertions: all 4 passed. VAL-DASH-002 confirmed time summary totals match DB aggregate (15.50h across 3 entries). VAL-DASH-003 confirmed POV status breakdown displays correct per-status counts. VAL-DASH-004 confirmed navigation links to /time-entries and /povs exist in dashboard. VAL-DASH-005 confirmed dashboard dynamically updates after create (+2h reflected) and delete (-2h reflected) operations."
+}
