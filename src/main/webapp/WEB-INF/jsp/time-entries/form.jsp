@@ -1,11 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/jsp/layout/header.jsp">
-    <jsp:param name="pageTitle" value="New Time Entry"/>
+    <jsp:param name="pageTitle" value="${formMode == 'edit' ? 'Edit Time Entry' : 'New Time Entry'}"/>
 </jsp:include>
 
 <div class="page-header">
-    <h2>New Time Entry</h2>
+    <h2><c:out value="${formMode == 'edit' ? 'Edit Time Entry' : 'New Time Entry'}"/></h2>
 </div>
 
 <div class="form-container">
@@ -21,7 +21,14 @@
         </div>
     </c:if>
 
-    <form method="post" action="${pageContext.request.contextPath}/time-entries">
+    <c:choose>
+        <c:when test="${formMode == 'edit'}">
+            <form method="post" action="${pageContext.request.contextPath}/time-entries?action=edit&amp;id=${entryId}">
+        </c:when>
+        <c:otherwise>
+            <form method="post" action="${pageContext.request.contextPath}/time-entries">
+        </c:otherwise>
+    </c:choose>
 
         <div class="form-group">
             <label for="scName">SC Name <span class="required">*</span></label>
@@ -65,7 +72,9 @@
         </div>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Save Time Entry</button>
+            <button type="submit" class="btn btn-primary">
+                <c:out value="${formMode == 'edit' ? 'Update Time Entry' : 'Save Time Entry'}"/>
+            </button>
             <a href="${pageContext.request.contextPath}/time-entries" class="btn btn-secondary">Cancel</a>
         </div>
 

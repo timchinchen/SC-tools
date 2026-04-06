@@ -732,4 +732,478 @@ class TimeEntryServletTest {
 
         conn.disconnect();
     }
+
+    // -------------------------------------------------------------------------
+    // GET /time-entries?action=edit&id=N (edit form) tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void getEditForm_validId_returns200() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4.5"), "Acme Corp", ActivityType.DEMO, "Demo notes");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=" + entry.getId());
+        assertEquals(200, conn.getResponseCode(), "GET edit form should return 200");
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_validId_prePopulatesScName() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice Johnson", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4.5"), "Acme Corp", ActivityType.DEMO, "Demo notes");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=" + entry.getId());
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("Alice Johnson"),
+                "Edit form should contain pre-populated SC Name");
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_validId_prePopulatesAllFields() throws Exception {
+        TimeEntry entry = createSampleEntry("Bob", LocalDate.of(2026, 5, 20),
+                new BigDecimal("7.25"), "BigCorp", ActivityType.TECHNICAL_DEEP_DIVE, "Deep dive session");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=" + entry.getId());
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("Bob"), "SC Name should be pre-populated");
+        assertTrue(body.contains("2026-05-20"), "Date should be pre-populated");
+        assertTrue(body.contains("7.25"), "Hours should be pre-populated");
+        assertTrue(body.contains("BigCorp"), "Account Name should be pre-populated");
+        assertTrue(body.contains("Deep dive session"), "Description should be pre-populated");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_validId_selectsCorrectActivityType() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("3"), "Acme", ActivityType.WORKSHOP, "Workshop");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=" + entry.getId());
+        String body = readResponseBody(conn);
+
+        // The WORKSHOP option should have the "selected" attribute
+        assertTrue(body.contains("WORKSHOP") && body.contains("selected"),
+                "Activity Type dropdown should have WORKSHOP selected");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_validId_showsEditTitle() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("2"), "Acme", ActivityType.DEMO, "");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=" + entry.getId());
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("Edit Time Entry"),
+                "Edit form should have 'Edit Time Entry' title");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_validId_formPointsToEditAction() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("2"), "Acme", ActivityType.DEMO, "");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=" + entry.getId());
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("action=edit"),
+                "Form action should include action=edit");
+        assertTrue(body.contains("id=" + entry.getId()),
+                "Form action should include the entry ID");
+        assertTrue(body.contains("method=\"post\""),
+                "Form should use POST method");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_validId_showsUpdateButton() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("2"), "Acme", ActivityType.DEMO, "");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=" + entry.getId());
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("Update Time Entry"),
+                "Edit form should show 'Update Time Entry' button text");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_nonExistentId_returns404() throws Exception {
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=99999");
+        int statusCode = conn.getResponseCode();
+        assertEquals(404, statusCode, "GET edit form with non-existent ID should return 404");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_invalidIdFormat_returns404() throws Exception {
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=abc");
+        int statusCode = conn.getResponseCode();
+        assertEquals(404, statusCode, "GET edit form with non-numeric ID should return 404");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_missingId_returns404() throws Exception {
+        HttpURLConnection conn = openConnection("/time-entries?action=edit");
+        int statusCode = conn.getResponseCode();
+        assertEquals(404, statusCode, "GET edit form without ID parameter should return 404");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void getEditForm_nonExistentId_noStackTrace() throws Exception {
+        HttpURLConnection conn = openConnection("/time-entries?action=edit&id=99999");
+        assertEquals(404, conn.getResponseCode());
+        String body = readErrorBody(conn);
+
+        assertFalse(body.contains("java.lang."),
+                "Error page should not contain Java class references");
+        assertFalse(body.contains("NullPointerException"),
+                "Error page should not contain NullPointerException");
+        assertFalse(body.contains("NumberFormatException"),
+                "Error page should not contain NumberFormatException");
+
+        conn.disconnect();
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /time-entries?action=edit&id=N (edit/update) tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void postEdit_validData_redirectsToList() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Old notes");
+        dao.create(entry);
+
+        String formData = "scName=Alice+Updated&date=2026-04-02&hours=5&accountName=NewCorp&activityType=DISCOVERY&description=New+notes";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=" + entry.getId(), formData);
+
+        assertEquals(302, conn.getResponseCode(),
+                "POST edit with valid data should redirect (302)");
+
+        String location = conn.getHeaderField("Location");
+        assertNotNull(location);
+        assertTrue(location.endsWith("/time-entries"),
+                "Should redirect to /time-entries, got: " + location);
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postEdit_validData_updatesEntryInDatabase() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Old notes");
+        dao.create(entry);
+        long id = entry.getId();
+
+        String formData = "scName=Bob&date=2026-05-01&hours=8&accountName=BigCorp&activityType=WORKSHOP&description=Updated";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=" + id, formData);
+        assertEquals(302, conn.getResponseCode());
+        conn.disconnect();
+
+        // Verify the entry was updated
+        TimeEntry updated = dao.findById(id);
+        assertNotNull(updated, "Entry should still exist after update");
+        assertEquals("Bob", updated.getScName());
+        assertEquals(LocalDate.of(2026, 5, 1), updated.getDate());
+        assertEquals(0, new BigDecimal("8").compareTo(updated.getHours()));
+        assertEquals("BigCorp", updated.getAccountName());
+        assertEquals(ActivityType.WORKSHOP, updated.getActivityType());
+        assertEquals("Updated", updated.getDescription());
+    }
+
+    @Test
+    void postEdit_validData_doesNotCreateDuplicate() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+
+        int countBefore = dao.findAll().size();
+
+        String formData = "scName=Alice+Updated&date=2026-04-02&hours=5&accountName=NewCorp&activityType=DISCOVERY&description=Updated";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=" + entry.getId(), formData);
+        assertEquals(302, conn.getResponseCode());
+        conn.disconnect();
+
+        int countAfter = dao.findAll().size();
+        assertEquals(countBefore, countAfter,
+                "Edit should not create a duplicate entry; count should remain the same");
+    }
+
+    @Test
+    void postEdit_invalidData_returnsFormWithErrors() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+
+        // Submit with missing SC Name
+        String formData = "scName=&date=2026-04-02&hours=5&accountName=NewCorp&activityType=DISCOVERY&description=test";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=" + entry.getId(), formData);
+
+        assertEquals(200, conn.getResponseCode(),
+                "POST edit with invalid data should return 200 (re-render form)");
+        String body = readResponseBody(conn);
+        assertTrue(body.contains("SC Name is required"),
+                "Should show validation error for missing SC Name");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postEdit_invalidHours_returnsFormWithErrors() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+
+        String formData = "scName=Alice&date=2026-04-02&hours=25&accountName=Acme&activityType=DEMO&description=";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=" + entry.getId(), formData);
+
+        assertEquals(200, conn.getResponseCode());
+        String body = readResponseBody(conn);
+        assertTrue(body.contains("Hours must not exceed 24"),
+                "Should show validation error for hours > 24");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postEdit_invalidData_preservesInput() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+
+        String formData = "scName=New+Name&date=2026-04-02&hours=&accountName=NewCorp&activityType=TRAINING&description=Some+notes";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=" + entry.getId(), formData);
+
+        assertEquals(200, conn.getResponseCode());
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("New Name"), "SC Name should be preserved");
+        assertTrue(body.contains("2026-04-02"), "Date should be preserved");
+        assertTrue(body.contains("NewCorp"), "Account Name should be preserved");
+        assertTrue(body.contains("Some notes"), "Description should be preserved");
+        assertTrue(body.contains("TRAINING") && body.contains("selected"),
+                "Activity Type selection should be preserved");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postEdit_invalidData_doesNotModifyEntry() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Original notes");
+        dao.create(entry);
+        long id = entry.getId();
+
+        // Submit with missing hours (invalid)
+        String formData = "scName=Changed&date=2026-04-02&hours=&accountName=ChangedCorp&activityType=WORKSHOP&description=Changed";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=" + id, formData);
+        assertEquals(200, conn.getResponseCode());
+        conn.disconnect();
+
+        // Verify the original entry is unchanged
+        TimeEntry unchanged = dao.findById(id);
+        assertEquals("Alice", unchanged.getScName(), "SC Name should not have changed");
+        assertEquals("Acme", unchanged.getAccountName(), "Account Name should not have changed");
+        assertEquals("Original notes", unchanged.getDescription(), "Description should not have changed");
+    }
+
+    @Test
+    void postEdit_nonExistentId_returns404() throws Exception {
+        String formData = "scName=Alice&date=2026-04-01&hours=4&accountName=Acme&activityType=DEMO&description=test";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=99999", formData);
+
+        assertEquals(404, conn.getResponseCode(),
+                "POST edit with non-existent ID should return 404");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postEdit_invalidIdFormat_returns404() throws Exception {
+        String formData = "scName=Alice&date=2026-04-01&hours=4&accountName=Acme&activityType=DEMO&description=test";
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=edit&id=abc", formData);
+
+        assertEquals(404, conn.getResponseCode(),
+                "POST edit with non-numeric ID should return 404");
+
+        conn.disconnect();
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /time-entries?action=delete&id=N (delete) tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void postDelete_validId_redirectsToList() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=delete&id=" + entry.getId(), "");
+
+        assertEquals(302, conn.getResponseCode(),
+                "POST delete should redirect (302)");
+
+        String location = conn.getHeaderField("Location");
+        assertNotNull(location);
+        assertTrue(location.endsWith("/time-entries"),
+                "Should redirect to /time-entries, got: " + location);
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postDelete_validId_removesEntryFromDatabase() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+        long id = entry.getId();
+
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=delete&id=" + id, "");
+        assertEquals(302, conn.getResponseCode());
+        conn.disconnect();
+
+        // Verify the entry was deleted
+        assertNull(dao.findById(id), "Entry should be removed after delete");
+    }
+
+    @Test
+    void postDelete_validId_onlyRemovesTargetEntry() throws Exception {
+        TimeEntry entry1 = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes 1");
+        dao.create(entry1);
+        TimeEntry entry2 = createSampleEntry("Bob", LocalDate.of(2026, 4, 2),
+                new BigDecimal("8"), "BigCorp", ActivityType.DISCOVERY, "Notes 2");
+        dao.create(entry2);
+
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=delete&id=" + entry1.getId(), "");
+        assertEquals(302, conn.getResponseCode());
+        conn.disconnect();
+
+        // entry1 should be gone, entry2 should still exist
+        assertNull(dao.findById(entry1.getId()), "Deleted entry should be removed");
+        assertNotNull(dao.findById(entry2.getId()), "Other entry should still exist");
+    }
+
+    @Test
+    void postDelete_nonExistentId_returns404() throws Exception {
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=delete&id=99999", "");
+
+        assertEquals(404, conn.getResponseCode(),
+                "POST delete with non-existent ID should return 404");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postDelete_invalidIdFormat_returns404() throws Exception {
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=delete&id=abc", "");
+
+        assertEquals(404, conn.getResponseCode(),
+                "POST delete with non-numeric ID should return 404");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postDelete_missingId_returns404() throws Exception {
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=delete", "");
+
+        assertEquals(404, conn.getResponseCode(),
+                "POST delete without ID parameter should return 404");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void postDelete_nonExistentId_noStackTrace() throws Exception {
+        HttpURLConnection conn = openPostConnection(
+                "/time-entries?action=delete&id=99999", "");
+
+        assertEquals(404, conn.getResponseCode());
+        String body = readErrorBody(conn);
+        assertFalse(body.contains("java.lang."),
+                "Error response should not contain Java class references");
+        assertFalse(body.contains("NullPointerException"),
+                "Error response should not contain NullPointerException");
+
+        conn.disconnect();
+    }
+
+    // -------------------------------------------------------------------------
+    // List page integration tests for edit/delete links
+    // -------------------------------------------------------------------------
+
+    @Test
+    void listPage_showsEditLink() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries");
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("action=edit&amp;id=" + entry.getId()),
+                "List page should contain edit link for the entry");
+
+        conn.disconnect();
+    }
+
+    @Test
+    void listPage_showsDeleteFormWithPostMethod() throws Exception {
+        TimeEntry entry = createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4"), "Acme", ActivityType.DEMO, "Notes");
+        dao.create(entry);
+
+        HttpURLConnection conn = openConnection("/time-entries");
+        String body = readResponseBody(conn);
+
+        assertTrue(body.contains("action=delete&amp;id=" + entry.getId()),
+                "List page should contain delete form action for the entry");
+        assertTrue(body.contains("method=\"post\""),
+                "Delete should use POST method");
+        assertTrue(body.contains("confirm("),
+                "Delete form should have JavaScript confirm dialog");
+
+        conn.disconnect();
+    }
 }
