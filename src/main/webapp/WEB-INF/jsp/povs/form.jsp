@@ -80,7 +80,14 @@
             <button type="submit" class="btn btn-primary">
                 <c:out value="${formMode == 'edit' ? 'Update POV' : 'Save POV'}"/>
             </button>
-            <a href="${pageContext.request.contextPath}/povs" class="btn btn-secondary">Cancel</a>
+            <c:choose>
+                <c:when test="${formMode == 'edit'}">
+                    <a href="${pageContext.request.contextPath}/povs?action=detail&amp;id=${povId}" class="btn btn-secondary">Cancel</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/povs" class="btn btn-secondary">Cancel</a>
+                </c:otherwise>
+            </c:choose>
         </div>
 
     </form>

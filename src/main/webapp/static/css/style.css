@@ -389,3 +389,71 @@ a:hover {
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+
+/* Detail Card */
+.detail-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+}
+
+.detail-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.detail-field-full {
+    grid-column: 1 / -1;
+}
+
+.detail-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.detail-value {
+    font-size: 1rem;
+    color: #1e293b;
+}
+
+/* Criteria Section */
+.criteria-section {
+    margin-top: 2rem;
+}
+
+.criteria-section .page-header {
+    margin-bottom: 1rem;
+}
+
+.criteria-section .page-header h3 {
+    font-size: 1.25rem;
+    color: #1e293b;
+}
+
+/* Back Link */
+.back-link a {
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* Required indicator */
+.required {
+    color: #dc2626;
+}
