@@ -82,6 +82,13 @@
             <version>${h2.version}</version>
         </dependency>
 
+        <!-- OpenTelemetry API (for custom span attributes; agent provides the implementation at runtime) -->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api</artifactId>
+            <version>1.60.1</version>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
