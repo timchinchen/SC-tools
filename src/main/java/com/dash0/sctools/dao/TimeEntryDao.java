@@ -173,6 +173,46 @@ public class TimeEntryDao {
     }
 
     /**
+     * Returns the sum of all time entry hours.
+     *
+     * @return the total hours, or BigDecimal.ZERO if no entries exist
+     */
+    public BigDecimal getTotalHours() {
+        String sql = "SELECT COALESCE(SUM(hours), 0) FROM time_entries";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getBigDecimal(1);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error calculating total hours", e);
+            throw new RuntimeException("Error calculating total hours", e);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * Returns the count of all time entries.
+     *
+     * @return the number of time entries
+     */
+    public long getCount() {
+        String sql = "SELECT COUNT(*) FROM time_entries";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error counting time entries", e);
+            throw new RuntimeException("Error counting time entries", e);
+        }
+        return 0;
+    }
+
+    /**
      * Maps a ResultSet row to a TimeEntry object.
      */
     private TimeEntry mapRow(ResultSet rs) throws SQLException {

@@ -289,6 +289,62 @@ class TimeEntryDaoTest {
     }
 
     // -------------------------------------------------------------------------
+    // getTotalHours() tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void getTotalHours_emptyDatabase_returnsZero() {
+        BigDecimal total = dao.getTotalHours();
+        assertEquals(0, BigDecimal.ZERO.compareTo(total),
+                "Total hours should be 0 when no entries exist");
+    }
+
+    @Test
+    void getTotalHours_singleEntry_returnsItsHours() {
+        dao.create(createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4.50"), "Acme", ActivityType.DEMO));
+
+        BigDecimal total = dao.getTotalHours();
+        assertEquals(0, new BigDecimal("4.50").compareTo(total),
+                "Total hours should equal the single entry's hours");
+    }
+
+    @Test
+    void getTotalHours_multipleEntries_returnsSum() {
+        dao.create(createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4.50"), "Acme", ActivityType.DEMO));
+        dao.create(createSampleEntry("Bob", LocalDate.of(2026, 4, 2),
+                new BigDecimal("8.00"), "BigCorp", ActivityType.DISCOVERY));
+        dao.create(createSampleEntry("Charlie", LocalDate.of(2026, 4, 3),
+                new BigDecimal("2.25"), "MegaCorp", ActivityType.WORKSHOP));
+
+        BigDecimal total = dao.getTotalHours();
+        assertEquals(0, new BigDecimal("14.75").compareTo(total),
+                "Total hours should be sum of all entries (4.50 + 8.00 + 2.25 = 14.75)");
+    }
+
+    // -------------------------------------------------------------------------
+    // getCount() tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void getCount_emptyDatabase_returnsZero() {
+        assertEquals(0, dao.getCount(),
+                "Count should be 0 when no entries exist");
+    }
+
+    @Test
+    void getCount_multipleEntries_returnsCorrectCount() {
+        dao.create(createSampleEntry("Alice", LocalDate.of(2026, 4, 1),
+                new BigDecimal("4.00"), "Acme", ActivityType.DEMO));
+        dao.create(createSampleEntry("Bob", LocalDate.of(2026, 4, 2),
+                new BigDecimal("8.00"), "BigCorp", ActivityType.DISCOVERY));
+
+        assertEquals(2, dao.getCount(),
+                "Count should be 2 when two entries exist");
+    }
+
+    // -------------------------------------------------------------------------
     // SQL injection safety tests
     // -------------------------------------------------------------------------
 

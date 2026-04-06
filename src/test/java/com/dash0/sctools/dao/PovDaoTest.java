@@ -387,6 +387,75 @@ class PovDaoTest {
     }
 
     // -------------------------------------------------------------------------
+    // getCount() tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void getCount_emptyDatabase_returnsZero() {
+        assertEquals(0, dao.getCount(),
+                "Count should be 0 when no POVs exist");
+    }
+
+    @Test
+    void getCount_multipleEntries_returnsCorrectCount() {
+        dao.create(createSamplePov("POV 1", "Acme", "Alice", "PLANNED"));
+        dao.create(createSamplePov("POV 2", "BigCorp", "Bob", "IN_PROGRESS"));
+        dao.create(createSamplePov("POV 3", "MegaCorp", "Charlie", "COMPLETED"));
+
+        assertEquals(3, dao.getCount(),
+                "Count should be 3 when three POVs exist");
+    }
+
+    // -------------------------------------------------------------------------
+    // countByStatus() tests
+    // -------------------------------------------------------------------------
+
+    @Test
+    void countByStatus_emptyDatabase_returnsAllZeros() {
+        java.util.Map<String, Long> counts = dao.countByStatus();
+        assertNotNull(counts);
+        assertEquals(0L, counts.get("PLANNED"));
+        assertEquals(0L, counts.get("IN_PROGRESS"));
+        assertEquals(0L, counts.get("COMPLETED"));
+        assertEquals(0L, counts.get("WON"));
+        assertEquals(0L, counts.get("LOST"));
+        assertEquals(0L, counts.get("CANCELLED"));
+    }
+
+    @Test
+    void countByStatus_withMixedStatuses_returnsCorrectCounts() {
+        dao.create(createSamplePov("P1", "Co1", "SC1", "PLANNED"));
+        dao.create(createSamplePov("P2", "Co2", "SC2", "PLANNED"));
+        dao.create(createSamplePov("IP1", "Co3", "SC3", "IN_PROGRESS"));
+        dao.create(createSamplePov("W1", "Co4", "SC4", "WON"));
+        dao.create(createSamplePov("W2", "Co5", "SC5", "WON"));
+        dao.create(createSamplePov("W3", "Co6", "SC6", "WON"));
+        dao.create(createSamplePov("L1", "Co7", "SC7", "LOST"));
+
+        java.util.Map<String, Long> counts = dao.countByStatus();
+        assertEquals(2L, counts.get("PLANNED"));
+        assertEquals(1L, counts.get("IN_PROGRESS"));
+        assertEquals(0L, counts.get("COMPLETED"));
+        assertEquals(3L, counts.get("WON"));
+        assertEquals(1L, counts.get("LOST"));
+        assertEquals(0L, counts.get("CANCELLED"));
+    }
+
+    @Test
+    void countByStatus_allSameStatus_returnsSingleNonZero() {
+        dao.create(createSamplePov("C1", "Co1", "SC1", "COMPLETED"));
+        dao.create(createSamplePov("C2", "Co2", "SC2", "COMPLETED"));
+
+        java.util.Map<String, Long> counts = dao.countByStatus();
+        assertEquals(0L, counts.get("PLANNED"));
+        assertEquals(0L, counts.get("IN_PROGRESS"));
+        assertEquals(2L, counts.get("COMPLETED"));
+        assertEquals(0L, counts.get("WON"));
+        assertEquals(0L, counts.get("LOST"));
+        assertEquals(0L, counts.get("CANCELLED"));
+    }
+
+    // -------------------------------------------------------------------------
     // SQL injection safety tests
     // -------------------------------------------------------------------------
 

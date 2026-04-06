@@ -9,7 +9,9 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data Access Object for Pov CRUD operations.
@@ -170,6 +172,58 @@ public class PovDao {
             LOG.error("Error deleting POV id: {}", id, e);
             throw new RuntimeException("Error deleting POV id: " + id, e);
         }
+    }
+
+    /**
+     * Returns the total count of all POVs.
+     *
+     * @return the number of POVs
+     */
+    public long getCount() {
+        String sql = "SELECT COUNT(*) FROM povs";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error counting POVs", e);
+            throw new RuntimeException("Error counting POVs", e);
+        }
+        return 0;
+    }
+
+    /**
+     * Returns a map of status to count for all POVs.
+     * The map contains all standard statuses (even those with zero count).
+     *
+     * @return a map where keys are status strings and values are counts
+     */
+    public Map<String, Long> countByStatus() {
+        // Initialize all statuses with zero count, in display order
+        Map<String, Long> counts = new LinkedHashMap<>();
+        counts.put("PLANNED", 0L);
+        counts.put("IN_PROGRESS", 0L);
+        counts.put("COMPLETED", 0L);
+        counts.put("WON", 0L);
+        counts.put("LOST", 0L);
+        counts.put("CANCELLED", 0L);
+
+        String sql = "SELECT status, COUNT(*) as cnt FROM povs GROUP BY status";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String status = rs.getString("status");
+                long count = rs.getLong("cnt");
+                counts.put(status, count);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error counting POVs by status", e);
+            throw new RuntimeException("Error counting POVs by status", e);
+        }
+        return counts;
     }
 
     /**
