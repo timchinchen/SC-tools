@@ -1,0 +1,75 @@
+{
+  "groupId": "group-b-edit-delete",
+  "milestone": "foundation-sc-time",
+  "testedAt": "2026-04-06T12:53:00Z",
+  "isolation": {
+    "appUrl": "http://localhost:8090",
+    "authentication": "none",
+    "testDataIdentifier": "EditTestUser / TestCorpGroupB"
+  },
+  "toolsUsed": ["curl"],
+  "assertions": {
+    "VAL-TIME-007": {
+      "status": "pass",
+      "title": "Edit time entry loads pre-populated form",
+      "steps": [
+        { "action": "POST /time-entries to create entry (scName=EditTestUser, date=2024-06-15, hours=4, accountName=TestCorpGroupB, activityType=WORKSHOP, description=EditTestGroupB)", "expected": "302 redirect, entry created", "observed": "302 redirect to /time-entries, entry visible in list with id=1" },
+        { "action": "GET /time-entries?action=edit&id=1", "expected": "Form pre-populated with entry values", "observed": "Form loaded with scName='EditTestUser', date='2024-06-15', hours='4', accountName='TestCorpGroupB', activityType WORKSHOP selected, description='EditTestGroupB'" }
+      ],
+      "evidence": {
+        "files": ["foundation-sc-time/group-b/VAL-TIME-007-edit-form.html", "foundation-sc-time/group-b/list-after-create.html"],
+        "description": "GET /time-entries?action=edit&id=1 returned 200. HTML form contains: input scName value='EditTestUser', input date value='2024-06-15', input hours value='4', input accountName value='TestCorpGroupB', select activityType with WORKSHOP option marked 'selected', textarea description containing 'EditTestGroupB'."
+      },
+      "details": "All form fields pre-populated correctly including the Activity Type dropdown with WORKSHOP selected.",
+      "issues": null
+    },
+    "VAL-TIME-008": {
+      "status": "pass",
+      "title": "Edit time entry updates and redirects",
+      "steps": [
+        { "action": "Count rows before edit", "expected": "2 (1 header + 1 data)", "observed": "2 rows" },
+        { "action": "POST /time-entries?action=edit&id=1 with hours=6, description=EditedByGroupB", "expected": "302 redirect to /time-entries", "observed": "HTTP 302, Location: http://localhost:8090/time-entries" },
+        { "action": "GET /time-entries to verify update", "expected": "Entry shows hours=6.00 and description=EditedByGroupB", "observed": "Entry shows hours=6.00 and description=EditedByGroupB" },
+        { "action": "Count rows after edit", "expected": "2 (unchanged)", "observed": "2 rows - no duplicate created" }
+      ],
+      "evidence": {
+        "files": ["foundation-sc-time/group-b/VAL-TIME-008-list-after-edit.html"],
+        "description": "POST edit returned 302 with Location header pointing to /time-entries. Follow-up GET showed hours changed from 4.00 to 6.00 and description changed from 'EditTestGroupB' to 'EditedByGroupB'. Row count unchanged at 2 (1 header + 1 data row)."
+      },
+      "details": "Edit successfully updated entry fields. PRG pattern followed (302 redirect). No duplicate entry created.",
+      "issues": null
+    },
+    "VAL-TIME-009": {
+      "status": "pass",
+      "title": "Delete time entry with confirmation",
+      "steps": [
+        { "action": "Inspect delete button HTML in list page", "expected": "JavaScript confirm() on delete form", "observed": "Form has onsubmit=\"return confirm('Are you sure you want to delete this time entry?');\"" },
+        { "action": "POST /time-entries?action=delete&id=1", "expected": "302 redirect, entry removed", "observed": "HTTP 302, Location: http://localhost:8090/time-entries" },
+        { "action": "GET /time-entries to verify deletion", "expected": "Entry no longer in list", "observed": "Empty state shown: 'No time entries yet.' Row count: 0" }
+      ],
+      "evidence": {
+        "files": ["foundation-sc-time/group-b/VAL-TIME-009-list-after-delete.html", "foundation-sc-time/group-b/list-after-create.html"],
+        "description": "Delete form in list HTML has onsubmit='return confirm(...)' for browser-side confirmation. POST delete returned 302. Subsequent GET showed empty state 'No time entries yet.' with 0 data rows. Note: curl cannot test cancel behavior of JS confirm() since that is browser-only; verified the confirm() JS is present in the HTML."
+      },
+      "details": "Delete form includes JavaScript confirm() dialog. POST delete removes entry and redirects. Cancel behavior verified by presence of 'return confirm(...)' which prevents form submission when user clicks Cancel in browser.",
+      "issues": null
+    },
+    "VAL-TIME-011": {
+      "status": "pass",
+      "title": "Non-existent time entry returns friendly error",
+      "steps": [
+        { "action": "GET /time-entries?action=edit&id=99999", "expected": "404 status, no Java stack trace", "observed": "HTTP 404 with message 'Time entry not found.'" },
+        { "action": "Check response body for java.lang. or NullPointerException", "expected": "0 matches", "observed": "0 matches - no Java stack traces in response" }
+      ],
+      "evidence": {
+        "files": ["foundation-sc-time/group-b/VAL-TIME-011-nonexistent-entry.html"],
+        "description": "GET /time-entries?action=edit&id=99999 returned HTTP 404 with body containing 'Time entry not found.' message. Grep for 'java.lang.' and 'NullPointerException' returned 0 matches. No stack traces exposed to user."
+      },
+      "details": "Returns proper 404 with 'Time entry not found.' message via Jetty error page. No Java stack traces or exception details exposed.",
+      "issues": null
+    }
+  },
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 4 assertions: all 4 passed. VAL-TIME-007 (edit form pre-populated), VAL-TIME-008 (edit updates and redirects), VAL-TIME-009 (delete with JS confirm), VAL-TIME-011 (non-existent entry returns 404)."
+}

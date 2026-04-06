@@ -1,0 +1,44 @@
+{
+  "milestone": "foundation-sc-time",
+  "round": 1,
+  "status": "pass",
+  "assertionsSummary": {
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-TIME-001",
+    "VAL-TIME-002",
+    "VAL-TIME-003",
+    "VAL-TIME-004",
+    "VAL-TIME-005",
+    "VAL-TIME-006",
+    "VAL-TIME-007",
+    "VAL-TIME-008",
+    "VAL-TIME-009",
+    "VAL-TIME-010",
+    "VAL-TIME-011"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Added 'Flow Validator Guidance: Web Browser' section with detailed testing instructions for subagents including key URLs, form fields, activity type enum values, and verification tips",
+      "source": "setup"
+    },
+    {
+      "target": "user-testing.md",
+      "description": "Documented that agent-browser is not usable due to npm cache permission issues (root-owned files in ~/.npm/_cacache) requiring sudo which is password-protected. curl was used as the testing tool instead.",
+      "source": "setup"
+    }
+  ],
+  "previousRound": null,
+  "testingTool": "curl (agent-browser unavailable due to npm cache permission issues)",
+  "flowReports": [
+    ".factory/validation/foundation-sc-time/user-testing/flows/group-a-create-flow.json",
+    ".factory/validation/foundation-sc-time/user-testing/flows/group-b-edit-delete.json"
+  ]
+}

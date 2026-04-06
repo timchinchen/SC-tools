@@ -1,0 +1,58 @@
+{
+  "groupId": "group-a-create-flow",
+  "milestone": "foundation-sc-time",
+  "testedAt": "2026-04-06T12:52:00Z",
+  "isolation": {
+    "appUrl": "http://localhost:8090",
+    "authentication": "none",
+    "databaseState": "shared H2 (concurrent subagents may modify)"
+  },
+  "toolsUsed": ["curl"],
+  "assertions": {
+    "VAL-TIME-001": {
+      "status": "pass",
+      "evidence": "curl GET http://localhost:8090/time-entries -> 200. HTML saved to evidence/foundation-sc-time/group-a/VAL-TIME-001-empty-list.html",
+      "details": "Page returned HTTP 200 with empty state message: '<p class=\"empty-state\">No time entries yet.</p>'. No table rendered. Page includes header, nav, and 'Add New Time Entry' button."
+    },
+    "VAL-TIME-003": {
+      "status": "pass",
+      "evidence": "curl GET http://localhost:8090/time-entries?action=new -> 200. HTML saved to evidence/foundation-sc-time/group-a/VAL-TIME-003-create-form.html",
+      "details": "Form contains all required fields: SC Name (text, required), Date (date, required), Hours (number, step=0.25, required), Account Name (text, required), Activity Type (select, required with 9 options), Description (textarea, optional). Activity Type dropdown has all 9 enum values: DEMO, DISCOVERY, POV_WORK, TECHNICAL_DEEP_DIVE, WORKSHOP, INTERNAL, TRAINING, ADMIN, OTHER. Form method='post' action='/time-entries'."
+    },
+    "VAL-TIME-005": {
+      "status": "pass",
+      "evidence": "curl POST http://localhost:8090/time-entries with empty body -> 200. Headers saved to evidence/foundation-sc-time/group-a/VAL-TIME-005-empty-post-headers.txt, body to VAL-TIME-005-empty-post-body.html. Subsequent GET /time-entries confirmed no entry created from empty POST.",
+      "details": "POST with empty data returned HTTP 200 (re-rendered form). Error summary div displayed with 5 validation messages: 'SC Name is required.', 'Date is required.', 'Hours is required.', 'Account Name is required.', 'Activity Type is required.'. No new entry was persisted in the database."
+    },
+    "VAL-TIME-006": {
+      "status": "pass",
+      "evidence": "Multiple curl POSTs testing boundary values. Evidence files: VAL-TIME-006-hours0-headers.txt, VAL-TIME-006-hours0-body.html, VAL-TIME-006-hoursNeg-headers.txt, VAL-TIME-006-hoursNeg-body.html, VAL-TIME-006-hours25-headers.txt, VAL-TIME-006-hours25-body.html, VAL-TIME-006-hours25dec-headers.txt",
+      "details": "hours=0 -> 200 with error 'Hours must be greater than 0.' hours=-1 -> 200 with error 'Hours must be greater than 0.' hours=25 -> 200 with error 'Hours must not exceed 24.' hours=2.5 with valid data -> 302 Found redirect to /time-entries (success). All boundary validations working correctly."
+    },
+    "VAL-TIME-010": {
+      "status": "pass",
+      "evidence": "curl POST with partial invalid data (missing hours). Evidence: VAL-TIME-010-preserved-input.html",
+      "details": "Form uses method='post'. After validation failure (empty hours), preserved values confirmed: scName='PreserveTestUser' (in value attr), date='2024-05-20', accountName='PreserveCorp', activityType WORKSHOP has 'selected' attribute, description textarea contains 'PreserveDesc'. All valid fields preserved on re-render."
+    },
+    "VAL-TIME-004": {
+      "status": "pass",
+      "evidence": "curl POST with valid data -> headers saved to VAL-TIME-004-create-headers.txt. Follow-up GET saved to VAL-TIME-004-list-after-create.html",
+      "details": "POST with scName=GroupATestUser, date=2024-04-10, hours=8, accountName=AcmeGroupA, activityType=DISCOVERY, description='GroupA full test entry' returned HTTP 302 Found with Location: http://localhost:8090/time-entries. Follow-up GET confirmed entry appears in list with matching values: GroupATestUser | 2024-04-10 | 8.00 | AcmeGroupA | Discovery | GroupA full test entry."
+    },
+    "VAL-TIME-002": {
+      "status": "pass",
+      "evidence": "curl GET http://localhost:8090/time-entries -> 200. HTML saved to evidence/foundation-sc-time/group-a/VAL-TIME-002-list-with-entries.html",
+      "details": "List page displays a data-table with correct columns: SC Name, Date, Hours, Account Name, Activity Type, Description, Actions. Two entries created by this group are shown: (1) GroupATestUser | 2024-04-10 | 8.00 | AcmeGroupA | Discovery | GroupA full test entry (2) GroupAUser | 2024-03-15 | 2.50 | GroupACorp | Demo | DecimalHoursTest. Each row has Edit and Delete action buttons."
+    }
+  },
+  "frictions": [
+    {
+      "description": "Database was not empty when testing started — another concurrent subagent (group-b) had already created and modified an entry (id=1 with EditTestUser/TestCorpGroupB). VAL-TIME-001 was tested first and caught the empty state before other group's modifications, but subsequent tests had to account for shared DB state.",
+      "resolved": true,
+      "resolution": "Tested VAL-TIME-001 first as instructed. Used unique prefixes (GroupA*) for data created by this group to distinguish from other groups. The other group's entry was later deleted by that group, so final list only shows this group's entries.",
+      "affectedAssertions": ["VAL-TIME-001", "VAL-TIME-005"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 7 assertions: all 7 passed. Empty state, create form, required field validation, hours boundary validation, input preservation, successful creation with PRG redirect, and list display all working correctly."
+}
