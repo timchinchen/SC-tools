@@ -2,6 +2,7 @@ package com.dash0.sctools.servlet;
 
 import com.dash0.sctools.dao.PovDao;
 import com.dash0.sctools.dao.TimeEntryDao;
+import io.opentelemetry.api.trace.Span;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -65,6 +66,10 @@ public class DashboardServlet extends HttpServlet {
         req.setAttribute("timeEntryCount", timeEntryCount);
         req.setAttribute("povCount", povCount);
         req.setAttribute("povStatusCounts", povStatusCounts);
+
+        Span.current().setAttribute("dashboard.total_hours", totalHours.doubleValue());
+        Span.current().setAttribute("dashboard.time_entry_count", timeEntryCount);
+        Span.current().setAttribute("dashboard.pov_count", povCount);
 
         LOG.debug("Dashboard loaded: totalHours={}, timeEntries={}, povs={}", totalHours, timeEntryCount, povCount);
 

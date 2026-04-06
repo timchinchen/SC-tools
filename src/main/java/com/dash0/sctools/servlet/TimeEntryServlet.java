@@ -3,6 +3,7 @@ package com.dash0.sctools.servlet;
 import com.dash0.sctools.dao.TimeEntryDao;
 import com.dash0.sctools.model.ActivityType;
 import com.dash0.sctools.model.TimeEntry;
+import io.opentelemetry.api.trace.Span;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -160,6 +161,8 @@ public class TimeEntryServlet extends HttpServlet {
         entry.setDescription(formData.description);
 
         timeEntryDao.create(entry);
+        Span.current().setAttribute("time_entry.id", entry.getId());
+        Span.current().setAttribute("time_entry.sc_name", entry.getScName());
         LOG.info("Created time entry id={} for sc={}", entry.getId(), entry.getScName());
 
         // PRG: redirect to the list page
@@ -205,6 +208,8 @@ public class TimeEntryServlet extends HttpServlet {
         existing.setDescription(formData.description);
 
         timeEntryDao.update(existing);
+        Span.current().setAttribute("time_entry.id", existing.getId());
+        Span.current().setAttribute("time_entry.sc_name", existing.getScName());
         LOG.info("Updated time entry id={} for sc={}", existing.getId(), existing.getScName());
 
         // PRG: redirect to the list page
@@ -230,6 +235,7 @@ public class TimeEntryServlet extends HttpServlet {
             return;
         }
 
+        Span.current().setAttribute("time_entry.id", id);
         timeEntryDao.delete(id);
         LOG.info("Deleted time entry id={}", id);
 

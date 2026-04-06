@@ -4,6 +4,7 @@ import com.dash0.sctools.dao.PovCriteriaDao;
 import com.dash0.sctools.dao.PovDao;
 import com.dash0.sctools.model.Pov;
 import com.dash0.sctools.model.PovCriteria;
+import io.opentelemetry.api.trace.Span;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -201,6 +202,9 @@ public class CriteriaServlet extends HttpServlet {
         criteria.setNotes(formData.notes);
 
         criteriaDao.create(criteria);
+        Span.current().setAttribute("criteria.id", criteria.getId());
+        Span.current().setAttribute("criteria.name", criteria.getName());
+        Span.current().setAttribute("criteria.pov_id", povId);
         LOG.info("Created criterion id={} name='{}' for POV id={}", criteria.getId(), criteria.getName(), povId);
 
         // PRG: redirect to the POV detail page
@@ -251,6 +255,9 @@ public class CriteriaServlet extends HttpServlet {
         existing.setNotes(formData.notes);
 
         criteriaDao.update(existing);
+        Span.current().setAttribute("criteria.id", existing.getId());
+        Span.current().setAttribute("criteria.name", existing.getName());
+        Span.current().setAttribute("criteria.pov_id", povId);
         LOG.info("Updated criterion id={} name='{}' for POV id={}", existing.getId(), existing.getName(), povId);
 
         // PRG: redirect to the POV detail page
@@ -277,6 +284,8 @@ public class CriteriaServlet extends HttpServlet {
             return;
         }
 
+        Span.current().setAttribute("criteria.id", id);
+        Span.current().setAttribute("criteria.pov_id", povId);
         criteriaDao.delete(id);
         LOG.info("Deleted criterion id={} from POV id={}", id, povId);
 

@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SC-Tools - ${param.pageTitle != null ? param.pageTitle : 'Solution Consultant Tools'}</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <script src="https://cdn.dash0.com/sdk-web/latest/dash0-sdk-web.min.js"
+            data-dash0-otel-collector-url="http://localhost:4318"
+            data-dash0-service-name="sc-tools-frontend"></script>
 </head>
 <body>
     <header class="site-header">
