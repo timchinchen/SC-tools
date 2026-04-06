@@ -23,12 +23,13 @@ Use for features involving:
 
 2. **Check preconditions**: Read `.factory/services.yaml` for commands. Run `mvn compile` to ensure the project builds. If preconditions mention other features, verify those exist.
 
-3. **Write tests FIRST (Red phase)**:
+3. **Write tests (TDD where practical)**:
    - Create JUnit 5 test classes in `src/test/java/` mirroring the production package structure.
-   - For servlet tests, use the embedded Jetty test harness or mock request/response objects.
-   - For DAO tests, use an in-memory H2 database with test schema setup.
+   - For DAO tests: use in-memory H2 (`jdbc:h2:mem:test`) with test schema setup. TDD Red-Green works well here.
+   - For servlet integration tests: these require live Jetty + JSP compilation, so implementation-first is acceptable. Write tests immediately after the servlet/JSP code, not as a separate phase.
+   - For scaffolding features: tests come after infrastructure is working.
    - Tests must cover: happy path, validation errors, edge cases, and error handling.
-   - Run `mvn test` — verify the new tests FAIL (red).
+   - Run `mvn test` to verify all tests pass.
 
 4. **Implement production code (Green phase)**:
    - Models in `src/main/java/.../model/`
