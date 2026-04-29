@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768" role="img" aria-labelledby="title desc">
+  <title id="title">SC-Tools POVs screenshot</title>
+  <desc id="desc">Dark SC-Tools POVs page showing a table of proof-of-value projects with statuses, dates, and edit and delete actions.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0316"/>
+      <stop offset="1" stop-color="#170626"/>
+    </linearGradient>
+    <linearGradient id="button" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ef5cff"/>
+      <stop offset="1" stop-color="#b51fc7"/>
+    </linearGradient>
+    <style>
+      .bg { fill: url(#page); }
+      .topbar { fill: #120724; stroke: #25143b; }
+      .logo { fill: #27314a; }
+      .brand { fill: #f4eefb; font: 700 16px Inter, Arial, sans-serif; }
+      .nav { fill: #9b81b8; font: 500 13px Inter, Arial, sans-serif; }
+      .page-title { fill: #f2ebfa; font: 700 23px Inter, Arial, sans-serif; }
+      .add { fill: url(#button); }
+      .add-text { fill: #170425; font: 700 12px Inter, Arial, sans-serif; }
+      .header { fill: #24123d; }
+      .th { fill: #a58abd; font: 700 10px Inter, Arial, sans-serif; letter-spacing: .7px; }
+      .td { fill: #ddd0ea; font: 12px Inter, Arial, sans-serif; }
+      .link { fill: #d74be5; font: 12px Inter, Arial, sans-serif; }
+      .line { stroke: #28113e; stroke-width: 1.2; }
+      .edit { fill: #321d55; }
+      .delete { fill: #ff4166; }
+      .action-text { fill: #fff4fb; font: 700 11px Inter, Arial, sans-serif; }
+      .badge { font: 700 9px Inter, Arial, sans-serif; }
+      .in-progress { fill: #53235f; }
+      .planned { fill: #261c62; }
+      .won { fill: #073f39; }
+      .cancelled { fill: #2c2945; }
+      .in-progress-text { fill: #e48cf0; }
+      .planned-text { fill: #9c91ff; }
+      .won-text { fill: #43e8b0; }
+      .cancelled-text { fill: #a19aae; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1024" height="768"/>
+  <rect class="topbar" width="1024" height="48"/>
+  <rect class="logo" x="22" y="8" width="28" height="28" rx="7"/>
+  <text x="30" y="27" fill="#f4eefb" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700">SC</text>
+  <text class="brand" x="59" y="28">SC-Tools</text>
+  <text class="nav" x="447" y="27">Dashboard</text>
+  <text class="nav" x="535" y="27">Time Entries</text>
+  <text class="nav" x="625" y="27">POVs</text>
+  <rect x="981" y="8" width="26" height="26" rx="8" fill="#140925" stroke="#2a1742"/>
+  <text x="990" y="27" fill="#ddd0ea" font-family="Arial, sans-serif" font-size="14"></text>
+
+  <text class="page-title" x="22" y="95">POVs</text>
+  <rect class="add" x="889" y="73" width="119" height="31" rx="9"/>
+  <text class="add-text" x="906" y="93">Create New POV</text>
+
+  <rect class="header" x="22" y="122" width="986" height="35"/>
+  <text class="th" x="34" y="145">NAME</text>
+  <text class="th" x="290" y="145">ACCOUNT NAME</text>
+  <text class="th" x="419" y="145">SC NAME</text>
+  <text class="th" x="563" y="145">STATUS</text>
+  <text class="th" x="670" y="145">START DATE</text>
+  <text class="th" x="771" y="145">TARGET END DATE</text>
+  <text class="th" x="891" y="145">ACTIONS</text>
+
+  <g id="rows">
+    <g transform="translate(0,0)">
+      <text class="link" x="34" y="184">Datadog-to-Dash0 Migration</text>
+      <text class="td" x="290" y="184">Zalando SE</text>
+      <text class="td" x="419" y="184">Bastian Spanneberg</text>
+      <rect class="in-progress" x="563" y="171" width="77" height="18" rx="9"/><text class="badge in-progress-text" x="570" y="183">IN PROGRESS</text>
+      <text class="td" x="670" y="184">2026-03-16</text>
+      <text class="td" x="771" y="184">2026-04-30</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,44)">
+      <text class="link" x="34" y="184">OTel-Native APM Rollout</text>
+      <text class="td" x="290" y="184">Deutsche Bank AG</text>
+      <text class="td" x="419" y="184">Jochen Schalanda</text>
+      <rect class="in-progress" x="563" y="171" width="77" height="18" rx="9"/><text class="badge in-progress-text" x="570" y="183">IN PROGRESS</text>
+      <text class="td" x="670" y="184">2026-03-26</text>
+      <text class="td" x="771" y="184">2026-05-10</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,88)">
+      <text class="link" x="34" y="184">K8s Resource-Centric Observability</text>
+      <text class="td" x="290" y="184">BMW Group</text>
+      <text class="td" x="419" y="184">Peter Juentgen</text>
+      <rect class="in-progress" x="563" y="171" width="77" height="18" rx="9"/><text class="badge in-progress-text" x="570" y="183">IN PROGRESS</text>
+      <text class="td" x="670" y="184">2026-03-21</text>
+      <text class="td" x="771" y="184">2026-05-05</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,132)">
+      <text class="link" x="34" y="184">Telemetry Cost Optimization</text>
+      <text class="td" x="290" y="184">Delivery Hero SE</text>
+      <text class="td" x="419" y="184">Aakansha Priya</text>
+      <rect class="planned" x="563" y="171" width="63" height="18" rx="9"/><text class="badge planned-text" x="570" y="183">PLANNED</text>
+      <text class="td" x="670" y="184">2026-04-20</text>
+      <text class="td" x="771" y="184">2026-05-30</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,176)">
+      <text class="link" x="34" y="184">Agentic AI Troubleshooting Pilot</text>
+      <text class="td" x="290" y="184">Allianz SE</text>
+      <text class="td" x="419" y="184">Lariel Fernandes</text>
+      <rect class="in-progress" x="563" y="171" width="77" height="18" rx="9"/><text class="badge in-progress-text" x="570" y="183">IN PROGRESS</text>
+      <text class="td" x="670" y="184">2026-03-31</text>
+      <text class="td" x="771" y="184">2026-05-15</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,220)">
+      <text class="link" x="34" y="184">Prometheus-to-Dash0 PromQL Migration</text>
+      <text class="td" x="290" y="184">Deutsche Telekom</text>
+      <text class="td" x="419" y="184">Bastian Krol</text>
+      <rect class="in-progress" x="563" y="171" width="77" height="18" rx="9"/><text class="badge in-progress-text" x="570" y="183">IN PROGRESS</text>
+      <text class="td" x="670" y="184">2026-03-11</text>
+      <text class="td" x="771" y="184">2026-04-25</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,264)">
+      <text class="link" x="34" y="184">Fintech Observability Platform</text>
+      <text class="td" x="290" y="184">Revolut Ltd</text>
+      <text class="td" x="419" y="184">Vitor Mouzinho</text>
+      <rect class="planned" x="563" y="171" width="63" height="18" rx="9"/><text class="badge planned-text" x="570" y="183">PLANNED</text>
+      <text class="td" x="670" y="184">2026-04-22</text>
+      <text class="td" x="771" y="184">2026-06-04</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,308)">
+      <text class="link" x="34" y="184">E-Commerce Distributed Tracing</text>
+      <text class="td" x="290" y="184">Otto Group</text>
+      <text class="td" x="419" y="184">Julian Kempff</text>
+      <rect class="won" x="563" y="171" width="38" height="18" rx="9"/><text class="badge won-text" x="570" y="183">WON</text>
+      <text class="td" x="670" y="184">2026-02-14</text>
+      <text class="td" x="771" y="184">2026-04-10</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,352)">
+      <text class="link" x="34" y="184">Industrial IoT Observability</text>
+      <text class="td" x="290" y="184">Siemens Digital</text>
+      <text class="td" x="419" y="184">Marcel Birkner</text>
+      <rect class="planned" x="563" y="171" width="63" height="18" rx="9"/><text class="badge planned-text" x="570" y="183">PLANNED</text>
+      <text class="td" x="670" y="184">2026-04-25</text>
+      <text class="td" x="771" y="184">2026-06-09</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,396)">
+      <text class="link" x="34" y="184">Streaming Platform Observability</text>
+      <text class="td" x="290" y="184">Spotify AB</text>
+      <text class="td" x="419" y="184">Aleksandar Stankovic</text>
+      <rect class="in-progress" x="563" y="171" width="77" height="18" rx="9"/><text class="badge in-progress-text" x="570" y="183">IN PROGRESS</text>
+      <text class="td" x="670" y="184">2026-03-28</text>
+      <text class="td" x="771" y="184">2026-05-07</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,440)">
+      <text class="link" x="34" y="184">Compliant Log Analytics</text>
+      <text class="td" x="290" y="184">Commerzbank AG</text>
+      <text class="td" x="419" y="184">Matthias Ruetten</text>
+      <rect class="won" x="563" y="171" width="38" height="18" rx="9"/><text class="badge won-text" x="570" y="183">WON</text>
+      <text class="td" x="670" y="184">2026-02-19</text>
+      <text class="td" x="771" y="184">2026-04-12</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,484)">
+      <text class="link" x="34" y="184">Payment Pipeline Tracing</text>
+      <text class="td" x="290" y="184">Adyen NV</text>
+      <text class="td" x="419" y="184">Miel Donkers</text>
+      <rect class="won" x="563" y="171" width="38" height="18" rx="9"/><text class="badge won-text" x="570" y="183">WON</text>
+      <text class="td" x="670" y="184">2026-01-30</text>
+      <text class="td" x="771" y="184">2026-03-31</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+      <line class="line" x1="22" y1="201" x2="1008" y2="201"/>
+    </g>
+    <g transform="translate(0,528)">
+      <text class="link" x="34" y="184">Pharma R&amp;D Observability</text>
+      <text class="td" x="290" y="184">Novo Nordisk</text>
+      <text class="td" x="419" y="184">Mads Thines</text>
+      <rect class="cancelled" x="563" y="171" width="75" height="18" rx="9"/><text class="badge cancelled-text" x="570" y="183">CANCELLED</text>
+      <text class="td" x="670" y="184">2026-03-06</text>
+      <text class="td" x="771" y="184">2026-04-07</text>
+      <rect class="edit" x="891" y="168" width="43" height="24" rx="7"/><text class="action-text" x="906" y="184">Edit</text>
+      <rect class="delete" x="941" y="168" width="52" height="24" rx="7"/><text class="action-text" x="951" y="184">Delete</text>
+    </g>
+  </g>
+</svg>

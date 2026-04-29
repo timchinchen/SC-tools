@@ -132,3 +132,7 @@ src/main/webapp/
 ### Time Entries
 
 ![SC-Tools time entries](docs/screenshots/time-entries.svg)
+
+### POVs
+
+![SC-Tools POVs](docs/screenshots/povs.svg)
