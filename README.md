@@ -123,3 +123,8 @@ src/main/webapp/
   static/                   CSS and static assets
 ```
 
+## Screenshots
+
+### Dashboard
+
+![SC-Tools dashboard](docs/screenshots/dashboard.svg)

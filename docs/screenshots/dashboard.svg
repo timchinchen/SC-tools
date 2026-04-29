@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768" role="img" aria-labelledby="title desc">
+  <title id="title">SC-Tools dashboard screenshot</title>
+  <desc id="desc">Dark SC-Tools dashboard showing time tracking summaries, POV project summaries, activity breakdowns, status overview, recent entries, and upcoming deadlines.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#110622"/>
+      <stop offset="1" stop-color="#220832"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#150a2b"/>
+      <stop offset="1" stop-color="#1b0b36"/>
+    </linearGradient>
+    <linearGradient id="cardBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1c1450"/>
+      <stop offset="1" stop-color="#1a103e"/>
+    </linearGradient>
+    <linearGradient id="cardPurple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#331045"/>
+      <stop offset="1" stop-color="#2a0d3f"/>
+    </linearGradient>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0.85 0 0 0 0.6 0 0.08 0 0 0.15 0 0 0.9 0 0.95 0 0 0 0.7 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      .bg { fill: url(#page); }
+      .topbar { fill: #120724; stroke: #25143b; }
+      .logo { fill: #27314a; }
+      .title { fill: #f4eefb; font: 700 16px Inter, Arial, sans-serif; }
+      .nav { fill: #9b81b8; font: 500 13px Inter, Arial, sans-serif; }
+      .section { fill: #eee6f7; font: 700 17px Inter, Arial, sans-serif; }
+      .card { fill: url(#card); stroke: #21113b; }
+      .small { fill: #a789c0; font: 700 9px Inter, Arial, sans-serif; letter-spacing: 1.3px; }
+      .value { fill: #f5edff; font: 700 26px Inter, Arial, sans-serif; }
+      .label { fill: #9a82b0; font: 12px Inter, Arial, sans-serif; }
+      .body { fill: #efe8f8; font: 600 13px Inter, Arial, sans-serif; }
+      .muted { fill: #8f78a8; font: 11px Inter, Arial, sans-serif; }
+      .accent { fill: #d93be6; }
+      .accent2 { fill: #38e0ad; }
+      .accent3 { fill: #7092ff; }
+      .barBg { stroke: #27123f; stroke-width: 6; stroke-linecap: round; }
+      .bar { stroke: #cf35df; stroke-width: 6; stroke-linecap: round; }
+      .pill { fill: #713187; stroke: #a34ab6; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1024" height="768"/>
+  <rect class="topbar" x="0" y="0" width="1024" height="52"/>
+  <rect class="logo" x="13" y="12" width="29" height="27" rx="7"/>
+  <text x="22" y="30" fill="#f2eff8" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="800">SC</text>
+  <text class="title" x="54" y="30">SC-Tools</text>
+  <text class="nav" x="440" y="29">Dashboard</text>
+  <text class="nav" x="530" y="29">Time Entries</text>
+  <text class="nav" x="623" y="29">POVs</text>
+  <rect x="977" y="11" width="28" height="28" rx="9" fill="#150727" stroke="#2c1747"/>
+  <text x="986" y="31" fill="#d8c7eb" font-family="Arial, sans-serif" font-size="16">*</text>
+
+  <text class="section" x="36" y="93">Time Tracking</text>
+  <circle cx="21" cy="87" r="7" fill="none" stroke="#d95ce9" stroke-width="2"/>
+  <text class="section" x="542" y="93">POV Projects</text>
+  <circle cx="527" cy="87" r="7" fill="none" stroke="#d95ce9" stroke-width="2"/>
+
+  <g transform="translate(14 118)">
+    <rect class="card" width="236" height="126" rx="9"/>
+    <text class="small" x="19" y="30">THIS WEEK</text>
+    <text class="value" x="19" y="80">129</text>
+    <text class="label" x="19" y="102">hours logged</text>
+    <rect x="195" y="18" width="36" height="36" rx="10" fill="#321252" filter="url(#glow)"/>
+    <circle cx="213" cy="36" r="7" fill="none" stroke="#728cff" stroke-width="2"/>
+  </g>
+
+  <g transform="translate(263 118)">
+    <rect class="card" width="236" height="126" rx="9"/>
+    <text class="small" x="19" y="30">THIS MONTH</text>
+    <text class="value" x="19" y="80">380.5</text>
+    <text class="label" x="19" y="102">hours logged</text>
+    <rect x="195" y="18" width="36" height="36" rx="10" fill="#3a0d4d" filter="url(#glow)"/>
+    <polyline points="202,41 209,35 214,38 224,28" fill="none" stroke="#d93be6" stroke-width="2"/>
+  </g>
+
+  <g transform="translate(519 118)">
+    <rect class="card" width="236" height="126" rx="9"/>
+    <text class="small" x="19" y="30">TOTAL POVS</text>
+    <text class="value" x="19" y="80">20</text>
+    <text class="label" x="19" y="102">active projects</text>
+    <rect x="195" y="18" width="36" height="36" rx="10" fill="#3a0d4d" filter="url(#glow)"/>
+    <circle cx="213" cy="36" r="7" fill="none" stroke="#e457ef" stroke-width="2"/>
+    <circle cx="213" cy="36" r="3" fill="none" stroke="#e457ef" stroke-width="1.5"/>
+  </g>
+
+  <g transform="translate(769 118)">
+    <rect class="card" width="236" height="126" rx="9"/>
+    <text class="small" x="19" y="30">IN PROGRESS</text>
+    <text class="value" x="19" y="80">8</text>
+    <text class="label" x="19" y="102">ongoing work</text>
+    <rect x="195" y="18" width="36" height="36" rx="10" fill="#3a0d4d" filter="url(#glow)"/>
+    <circle cx="213" cy="36" r="7" fill="none" stroke="#db2aea" stroke-width="2"/>
+  </g>
+
+  <g transform="translate(14 264)">
+    <rect class="card" width="485" height="233" rx="9"/>
+    <text class="body" x="19" y="31">Activity Breakdown</text>
+    <text class="label" x="19" y="61">POV Work</text>
+    <text class="body" x="438" y="61">143h</text>
+    <line class="barBg" x1="22" y1="75" x2="477" y2="75"/>
+    <line class="bar" x1="22" y1="75" x2="477" y2="75"/>
+    <text class="label" x="19" y="105">Technical Deep Dive</text>
+    <text class="body" x="457" y="105">76h</text>
+    <line class="barBg" x1="22" y1="119" x2="477" y2="119"/>
+    <line class="bar" x1="22" y1="119" x2="268" y2="119"/>
+    <text class="label" x="19" y="149">Demo</text>
+    <text class="body" x="458" y="149">46h</text>
+    <line class="barBg" x1="22" y1="163" x2="477" y2="163"/>
+    <line class="bar" x1="22" y1="163" x2="174" y2="163"/>
+    <text class="label" x="19" y="193">Discovery</text>
+    <text class="body" x="458" y="193">36h</text>
+    <line class="barBg" x1="22" y1="207" x2="477" y2="207"/>
+    <line class="bar" x1="22" y1="207" x2="143" y2="207"/>
+  </g>
+
+  <g transform="translate(519 264)">
+    <rect class="card" width="486" height="242" rx="9"/>
+    <text class="body" x="19" y="31">Status Overview</text>
+    <rect x="19" y="47" width="219" height="82" rx="7" fill="url(#cardBlue)"/>
+    <text class="small" x="34" y="90" fill="#6e95ff">PLANNED</text>
+    <text class="value" x="34" y="114" fill="#84a2ff">6</text>
+    <rect x="248" y="47" width="219" height="82" rx="7" fill="#171635"/>
+    <text class="small" x="263" y="90" fill="#44e4b1">WON</text>
+    <text class="value" x="263" y="114" fill="#51f2bd">4</text>
+    <rect x="19" y="140" width="219" height="82" rx="7" fill="#211033"/>
+    <text class="small" x="34" y="183">CANCELLED</text>
+    <text class="value" x="34" y="207" fill="#b4a5c7">2</text>
+    <rect x="248" y="140" width="219" height="82" rx="7" fill="url(#cardPurple)"/>
+    <text class="small" x="263" y="183" fill="#f06dff">ACTIVE</text>
+    <text class="value" x="263" y="207" fill="#f7a4ff">8</text>
+  </g>
+
+  <g transform="translate(14 517)">
+    <rect class="card" width="485" height="238" rx="9"/>
+    <text class="body" x="19" y="31">Recent Entries</text>
+    <rect x="19" y="47" width="447" height="55" rx="6" fill="#1f1038"/>
+    <text class="body" x="29" y="69">Shawn Koyithara</text>
+    <text class="muted" x="29" y="88">Personio SE</text>
+    <rect class="pill" x="426" y="61" width="30" height="26" rx="6"/>
+    <text fill="#efb1fb" x="434" y="78" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700">3h</text>
+    <rect x="19" y="111" width="447" height="55" rx="6" fill="#1f1038"/>
+    <text class="body" x="29" y="133">Bastian Spanneberg</text>
+    <text class="muted" x="29" y="152">Deutsche Telekom</text>
+    <rect class="pill" x="426" y="125" width="30" height="26" rx="6"/>
+    <text fill="#efb1fb" x="434" y="142" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700">8h</text>
+    <rect x="19" y="175" width="447" height="55" rx="6" fill="#1f1038"/>
+    <text class="body" x="29" y="197">Aakansha Priya</text>
+    <text class="muted" x="29" y="216">Infosys BPM EU</text>
+    <rect class="pill" x="426" y="189" width="30" height="26" rx="6"/>
+    <text fill="#efb1fb" x="434" y="206" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700">6h</text>
+  </g>
+
+  <g transform="translate(519 527)">
+    <rect class="card" width="486" height="229" rx="9"/>
+    <text class="body" x="19" y="31">Upcoming Deadlines</text>
+    <rect x="19" y="47" width="447" height="56" rx="6" fill="#1f1038"/>
+    <text class="body" x="29" y="70">Prometheus-to-Dash0 PromQL Migration</text>
+    <text class="muted" x="29" y="90">Deutsche Telekom</text>
+    <rect x="402" y="58" width="54" height="24" rx="6" fill="#4d173c" stroke="#b33368"/>
+    <text fill="#fb7e91" x="411" y="74" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700">10 days</text>
+    <rect x="19" y="113" width="447" height="56" rx="6" fill="#1f1038"/>
+    <text class="body" x="29" y="136">Dynatrace Replacement</text>
+    <text class="muted" x="29" y="156">SAP SE</text>
+    <rect x="402" y="124" width="54" height="24" rx="6" fill="#4d173c" stroke="#b33368"/>
+    <text fill="#fb7e91" x="411" y="140" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700">12 days</text>
+    <rect x="19" y="179" width="447" height="56" rx="6" fill="#1f1038"/>
+    <text class="body" x="29" y="202">Datadog-to-Dash0 Migration</text>
+    <text class="muted" x="29" y="222">Zalando SE</text>
+    <rect class="pill" x="402" y="190" width="54" height="24" rx="6"/>
+    <text fill="#efb1fb" x="411" y="206" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700">15 days</text>
+  </g>
+</svg>
