@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768" role="img" aria-labelledby="title desc">
+  <title id="title">SC-Tools time entries screenshot</title>
+  <desc id="desc">Dark SC-Tools Time Entries page showing a table of logged consultant time with edit and delete actions.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0316"/>
+      <stop offset="1" stop-color="#170626"/>
+    </linearGradient>
+    <linearGradient id="button" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ef5cff"/>
+      <stop offset="1" stop-color="#b51fc7"/>
+    </linearGradient>
+    <style>
+      .bg { fill: url(#page); }
+      .topbar { fill: #120724; stroke: #25143b; }
+      .logo { fill: #27314a; }
+      .brand { fill: #f4eefb; font: 700 16px Inter, Arial, sans-serif; }
+      .nav { fill: #9b81b8; font: 500 13px Inter, Arial, sans-serif; }
+      .page-title { fill: #f2ebfa; font: 700 23px Inter, Arial, sans-serif; }
+      .add { fill: url(#button); }
+      .add-text { fill: #170425; font: 700 12px Inter, Arial, sans-serif; }
+      .header { fill: #24123d; }
+      .th { fill: #a58abd; font: 700 10px Inter, Arial, sans-serif; letter-spacing: .7px; }
+      .td { fill: #ddd0ea; font: 12px Inter, Arial, sans-serif; }
+      .line { stroke: #28113e; stroke-width: 1.2; }
+      .edit { fill: #321d55; }
+      .delete { fill: #ff4166; }
+      .action-text { fill: #fff4fb; font: 700 11px Inter, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1024" height="768"/>
+  <rect class="topbar" width="1024" height="48"/>
+  <rect class="logo" x="14" y="8" width="28" height="28" rx="7"/>
+  <text x="22" y="27" fill="#f4eefb" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700">SC</text>
+  <text class="brand" x="55" y="28">SC-Tools</text>
+  <text class="nav" x="443" y="28">Dashboard</text>
+  <text class="nav" x="531" y="28">Time Entries</text>
+  <text class="nav" x="623" y="28">POVs</text>
+  <circle cx="992" cy="24" r="14" fill="#140827" stroke="#2d1649"/>
+  <text x="986" y="29" fill="#d8c2ef" font-family="Arial, sans-serif" font-size="14">*</text>
+
+  <text class="page-title" x="18" y="95">Time Entries</text>
+  <rect class="add" x="871" y="73" width="135" height="31" rx="9"/>
+  <text class="add-text" x="886" y="93">Add New Time Entry</text>
+
+  <g transform="translate(18 122)">
+    <rect class="header" width="988" height="35"/>
+    <text class="th" x="12" y="23">SC NAME</text>
+    <text class="th" x="143" y="23">DATE</text>
+    <text class="th" x="231" y="23">HOURS</text>
+    <text class="th" x="294" y="23">ACCOUNT NAME</text>
+    <text class="th" x="425" y="23">ACTIVITY TYPE</text>
+    <text class="th" x="549" y="23">DESCRIPTION</text>
+    <text class="th" x="876" y="23">ACTIONS</text>
+
+    <g transform="translate(0 35)">
+      <text class="td" x="12" y="34">Mirko Novakovic</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">3</text>
+      <text class="td" x="294" y="34">Zalando SE</text>
+      <text class="td" x="425" y="34">Demo</text>
+      <text class="td" x="549" y="34">Executive demo of Dash0 OTel-native platform to CTO</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 91)">
+      <text class="td" x="12" y="34">Miel Donkers</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">7</text>
+      <text class="td" x="294" y="34">ING Group NV</text>
+      <text class="td" x="425" y="34">POV Work</text>
+      <text class="td" x="549" y="34">Auto-instrumentation setup for Java microservices fleet</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 147)">
+      <text class="td" x="12" y="34">Marcel Sim</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">3</text>
+      <text class="td" x="294" y="34">N26 GmbH</text>
+      <text class="td" x="425" y="34">Discovery</text>
+      <text class="td" x="549" y="34">Growth opportunity assessment for fintech vertical</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 203)">
+      <text class="td" x="12" y="34">Duart Snel</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">7</text>
+      <text class="td" x="294" y="34">Philips Healthcare</text>
+      <text class="td" x="425" y="34">POV Work</text>
+      <text class="td" x="549" y="24">Integration of OTel traces with existing Prometheus</text>
+      <text class="td" x="549" y="42">metrics</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 259)">
+      <text class="td" x="12" y="34">Jochen Schalanda</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">7</text>
+      <text class="td" x="294" y="34">Deutsche Bank AG</text>
+      <text class="td" x="425" y="34">POV Work</text>
+      <text class="td" x="549" y="24">PromQL migration tooling and Grafana dashboard</text>
+      <text class="td" x="549" y="42">conversion</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 315)">
+      <text class="td" x="12" y="24">Sofie Hansson</text>
+      <text class="td" x="12" y="42">Lloyd</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">2</text>
+      <text class="td" x="294" y="34">Internal</text>
+      <text class="td" x="425" y="34">Admin</text>
+      <text class="td" x="549" y="24">Competitive analysis content: Dash0 vs Datadog pricing</text>
+      <text class="td" x="549" y="42">model</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 371)">
+      <text class="td" x="12" y="34">Leon Busch</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">4</text>
+      <text class="td" x="294" y="34">Personio SE</text>
+      <text class="td" x="425" y="34">Discovery</text>
+      <text class="td" x="549" y="24">Outbound discovery for HR-tech vertical observability</text>
+      <text class="td" x="549" y="42">needs</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 427)">
+      <text class="td" x="12" y="34">Jack Plunkett</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">3</text>
+      <text class="td" x="294" y="34">Revolut Ltd</text>
+      <text class="td" x="425" y="34">Discovery</text>
+      <text class="td" x="549" y="34">Discovery call on migrating from New Relic to Dash0</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 483)">
+      <text class="td" x="12" y="34">Thiemo Krause</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">7</text>
+      <text class="td" x="294" y="34">SAP SE</text>
+      <text class="td" x="425" y="34">POV Work</text>
+      <text class="td" x="549" y="24">ABAP-to-cloud OTel bridge integration for hybrid</text>
+      <text class="td" x="549" y="42">landscape</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 539)">
+      <text class="td" x="12" y="34">Ayooluwa Isaiah</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">5</text>
+      <text class="td" x="294" y="34">Internal</text>
+      <text class="td" x="425" y="34">Other</text>
+      <text class="td" x="549" y="24">Technical blog post: Migrating from Datadog to Dash0 in</text>
+      <text class="td" x="549" y="42">30 minutes</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+      <line class="line" y1="56" x2="988" y2="56"/>
+    </g>
+
+    <g transform="translate(0 595)">
+      <text class="td" x="12" y="34">Aakansha Priya</text>
+      <text class="td" x="143" y="24">2026-04-</text>
+      <text class="td" x="143" y="42">14</text>
+      <text class="td" x="231" y="34">6</text>
+      <text class="td" x="294" y="34">Infosys BPM EU</text>
+      <text class="td" x="425" y="34">POV Work</text>
+      <text class="td" x="549" y="34">Architecture design for multi-cloud OTel observability</text>
+      <rect class="edit" x="876" y="13" width="41" height="25" rx="8"/>
+      <text class="action-text" x="889" y="30">Edit</text>
+      <rect class="delete" x="924" y="13" width="52" height="25" rx="8"/>
+      <text class="action-text" x="940" y="30">Delete</text>
+    </g>
+  </g>
+</svg>

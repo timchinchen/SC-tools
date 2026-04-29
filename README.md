@@ -128,3 +128,7 @@ src/main/webapp/
 ### Dashboard
 
 ![SC-Tools dashboard](docs/screenshots/dashboard.svg)
+
+### Time Entries
+
+![SC-Tools time entries](docs/screenshots/time-entries.svg)
